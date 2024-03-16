@@ -1,8 +1,12 @@
+import 'dart:ffi';
+import 'dart:math';
+
 import 'package:backpack_pal/cities.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
+import 'package:getwidget/size/gf_size.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -20,8 +24,12 @@ class MyMap extends StatefulWidget {
 class _MyMapState extends State<MyMap> {
   Logger logger = Logger();
 
+  bool shakeButtons = false;
+
   String city_from = '';
   String city_to = '';
+
+  double distanceBetween = 0.0;
 
   LatLng originLatLong = LatLng(41.0086, 28.9802);
   LatLng destinationLatLong = LatLng(41.0086, 28.9302);
@@ -51,54 +59,7 @@ class _MyMapState extends State<MyMap> {
       appBar: AppBar(
         centerTitle: false,
         title: const Text('Google Maps'),
-        actions: [
-          if (_origin != null)
-            TextButton(
-              onPressed: () => _googleMapController.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _origin!.position,
-                    zoom: 10,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.green,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.gps_fixed),
-                  SizedBox(width: 8),
-                  Text('FROM'),
-                ],
-              ),
-            ),
-          if (_destination != null)
-            TextButton(
-              onPressed: () => _googleMapController.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _destination!.position,
-                    zoom: 10,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.blue,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.location_on_rounded),
-                  SizedBox(width: 8),
-                  Text('TO'),
-                ],
-              ),
-            ),
-        ],
+        actions: [],
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
@@ -106,7 +67,7 @@ class _MyMapState extends State<MyMap> {
           children: [
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
+                borderRadius: BorderRadius.circular(25.0),
                 border: Border.all(
                   color: Colors.black,
                   width: 4.0,
@@ -142,12 +103,12 @@ class _MyMapState extends State<MyMap> {
                     ),
                   ),
                   Positioned(
-                    bottom: 16.0,
+                    bottom: 17.0,
                     right: 60.0,
                     child: Opacity(
                       opacity: 0.7,
                       child: FloatingActionButton(
-                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Colors.white.withOpacity(0.9),
                         foregroundColor: Colors.black,
                         onPressed: () {
                           if (_info != null) {
@@ -177,48 +138,124 @@ class _MyMapState extends State<MyMap> {
                   child: Container(),
                 ),
               ),
-            SizedBox(height: 30),
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GFButton(
-                  onPressed: chooseFrom,
-                  text: city_from,
-                  color: Colors.black,
-                  icon: Icon(Icons.gps_fixed_rounded),
-                  type: GFButtonType.outline2x,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image.asset(
-                    'assets/route.png',
-                    width: 100,
-                    height: 100,
+                if (_origin != null)
+                  TextButton(
+                    onPressed: () => _googleMapController.animateCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                          target: _origin!.position,
+                          zoom: 10,
+                          tilt: 50.0,
+                        ),
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.green,
+                      textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.gps_fixed),
+                        SizedBox(width: 8),
+                        Text('FROM'),
+                      ],
+                    ),
+                  ),
+                SizedBox(width: 110),
+                if (_destination != null)
+                  TextButton(
+                    onPressed: () => _googleMapController.animateCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                          target: _destination!.position,
+                          zoom: 10,
+                          tilt: 50.0,
+                        ),
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                      textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.location_on_rounded),
+                        SizedBox(width: 8),
+                        Text('TO'),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  constraints: const BoxConstraints(
+                      minWidth: 150), // Adjust the minWidth as needed
+                  child: GFButton(
+                    onPressed: chooseFrom,
+                    text: _truncateCityName(city_from),
+                    color: shakeButtons && city_from.isEmpty
+                        ? Colors.red
+                        : Colors.black,
+                    // icon: Icon(Icons.gps_fixed_rounded),
+                    type: GFButtonType.outline2x,
+                    size: GFSize.LARGE,
                   ),
                 ),
-                GFButton(
-                  onPressed: chooseTo,
-                  text: city_to,
-                  color: Colors.black,
-                  icon: Icon(Icons.location_on_rounded),
-                  type: GFButtonType.outline2x,
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.arrow_forward_ios_rounded),
+                ),
+                Container(
+                  constraints: const BoxConstraints(
+                      minWidth: 150), // Adjust the minWidth as needed
+                  child: GFButton(
+                    onPressed: chooseTo,
+                    text: _truncateCityName(city_to),
+                    color: shakeButtons && city_to.isEmpty
+                        ? Colors.red
+                        : Colors.black,
+                    // icon: const Ico  n(Icons.location_on_rounded),
+                    type: GFButtonType.outline2x,
+                    size: GFSize.LARGE,
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
                   child: GFButton(
                     onPressed: rotaOlustur,
-                    text: "ROTA OLUŞTUR",
+                    text: "ROTA HESAPLA",
                     textStyle: TextStyle(
                       fontFamily: GoogleFonts.luckiestGuy().fontFamily,
                       color: Colors.black,
                     ),
-                    icon: Icon(Icons.route),
+                    icon: const Icon(Icons.route),
                     color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${distanceBetween} km',
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.roboto().fontFamily,
+                    fontSize: 20,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -226,7 +263,43 @@ class _MyMapState extends State<MyMap> {
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue,
+          child: Icon(
+            Icons.add,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            show_add_dialog();
+          }),
     );
+  }
+
+  double calculateDistance(LatLng from, LatLng to) {
+    const double earthRadius = 6371.0; // Radius of the Earth in kilometers
+
+    // Convert latitude and longitude from degrees to radians
+    double fromLatRadians = _degreesToRadians(from.latitude);
+    double fromLngRadians = _degreesToRadians(from.longitude);
+    double toLatRadians = _degreesToRadians(to.latitude);
+    double toLngRadians = _degreesToRadians(to.longitude);
+
+    // Calculate the differences between coordinates
+    double latDiff = toLatRadians - fromLatRadians;
+    double lngDiff = toLngRadians - fromLngRadians;
+
+    // Apply the Haversine formula
+    double a = pow(sin(latDiff / 2), 2) +
+        cos(fromLatRadians) * cos(toLatRadians) * pow(sin(lngDiff / 2), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = earthRadius * c;
+
+    return distance; // Distance in kilometers
+  }
+
+  double _degreesToRadians(double degrees) {
+    return degrees * (pi / 180);
   }
 
   void _addMarker(LatLng pos) async {
@@ -343,19 +416,111 @@ class _MyMapState extends State<MyMap> {
 
   void rotaOlustur() {
     if (city_from.isNotEmpty && city_to.isNotEmpty) {
-      LatLng originLatLng = turkishCitiesCoordinates[city_from]!;
-      LatLng destinationLatLng = turkishCitiesCoordinates[city_to]!;
+      if (city_from == city_to) {
+        setState(() {
+          shakeButtons = true;
+        });
 
-      addOriginMarker(originLatLng);
-      addDestinationMarker(destinationLatLng);
+        // Delay the restoration of the buttons
+        Future.delayed(Duration(milliseconds: 500), () {
+          setState(() {
+            shakeButtons = false;
+          });
+        });
+
+        return;
+      }
+
+      originLatLong = turkishCitiesCoordinates[city_from]!;
+      destinationLatLong = turkishCitiesCoordinates[city_to]!;
+
+      addOriginMarker(originLatLong);
+      addDestinationMarker(destinationLatLong);
+
+      double distance2 = calculateDistance(originLatLong, destinationLatLong);
+
+      setState(() {
+        distanceBetween = double.parse(distance2.toStringAsFixed(2));
+      });
 
       _googleMapController.animateCamera(
-        CameraUpdate.newLatLngZoom(originLatLng, 7),
+        CameraUpdate.newLatLngZoom(originLatLong, 7),
       );
     } else {
       // Show a message or handle the case when both cities are not selected
-      
-      print("Both origin and destination cities must be selected.");
+
+      // Shake the buttons temporarily
+      setState(() {
+        shakeButtons = true;
+      });
+
+      // Delay the restoration of the buttons
+      Future.delayed(Duration(milliseconds: 500), () {
+        setState(() {
+          shakeButtons = false;
+        });
+      });
     }
+  }
+
+  String _truncateCityName(String cityName) {
+    const maxLength = 9; // Define the maximum length before truncation
+    if (cityName.length > maxLength) {
+      return '${cityName.substring(0, maxLength)}...'; // Truncate and add ellipsis
+    } else {
+      return cityName; // Return the original name if it's short
+    }
+  }
+
+  void show_add_dialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Dikkat",
+            style: GoogleFonts.luckiestGuy(fontSize: 30),
+          ),
+          content: Text("Bu rotayı eklemek istiyor musunuz?",
+              style: GoogleFonts.ubuntuCondensed(fontSize: 20)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: GFButton(
+                text: "Hayır",
+                textStyle: TextStyle(
+                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                  color: Colors.black,
+                ),
+                color: Colors.red,
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss dialog
+                },
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Perform action for "Evet" button here
+              },
+              child: GFButton(
+                text: "Evet",
+                textStyle: TextStyle(
+                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                  color: Colors.black,
+                ),
+                color: Colors.green,
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss dialog
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

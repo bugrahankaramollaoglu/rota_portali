@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.water_drop_rounded, size: 30),
+            icon: Icon(Icons.route_rounded, size: 30),
             label: '',
           ),
           BottomNavigationBarItem(

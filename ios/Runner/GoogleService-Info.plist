@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>242989011538-dd57anifhfqo3ubr9mk7dnjsh8pm6sir.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.242989011538-dd57anifhfqo3ubr9mk7dnjsh8pm6sir</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>242989011538-segk582qa7ui6onhjkck88iuijn5qj35.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBjCcTFjXfF_ApHul57oeBj9hn-yOfJ8_E</string>
+	<key>GCM_SENDER_ID</key>
+	<string>242989011538</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.backpackPal</string>
+	<key>PROJECT_ID</key>
+	<string>healtrack-c1807</string>
+	<key>STORAGE_BUCKET</key>
+	<string>healtrack-c1807.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:242989011538:ios:e0c780ca4705691d72c58b</string>
+</dict>
+</plist>

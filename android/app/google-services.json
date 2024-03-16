@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "242989011538",
+    "project_id": "healtrack-c1807",
+    "storage_bucket": "healtrack-c1807.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:242989011538:android:d2010ddc6dbfcd4c72c58b",
+        "android_client_info": {
+          "package_name": "com.example.backpack_pal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "242989011538-f84h1q7nmgnr5mu9ssavon18d3qtrnk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz13scZUWUH1GznJhAvyjXbvcnME20qj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "242989011538-606hv75kjcinon03aq3ao6gmf6n2njvo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "242989011538-goisdtvjgpbbl275c3jpcq0bla47mhot.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.healtracker"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:242989011538:android:d1c80e5eac39aea872c58b",
+        "android_client_info": {
+          "package_name": "com.example.healtracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "242989011538-segk582qa7ui6onhjkck88iuijn5qj35.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.healtracker",
+            "certificate_hash": "83206bcfb72fadda213788c0167e5052ddd5ce55"
+          }
+        },
+        {
+          "client_id": "242989011538-f84h1q7nmgnr5mu9ssavon18d3qtrnk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz13scZUWUH1GznJhAvyjXbvcnME20qj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "242989011538-606hv75kjcinon03aq3ao6gmf6n2njvo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "242989011538-goisdtvjgpbbl275c3jpcq0bla47mhot.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.healtracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

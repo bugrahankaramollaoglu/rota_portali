@@ -228,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _appName() {
     return Container(
       child: Text(
-        'rota.',
+        'rota',
         style: GoogleFonts.arvo(fontSize: 30),
       ),
     );

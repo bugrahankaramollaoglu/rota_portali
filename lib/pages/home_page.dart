@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
+      // extendBody: true,
       body: GradientBackground(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

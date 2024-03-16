@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:math';
 
 import 'package:backpack_pal/cities.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/button/gf_button.dart';
@@ -28,6 +29,8 @@ class _MyMapState extends State<MyMap> {
 
   String city_from = '';
   String city_to = '';
+  String cityChosenFrom = '';
+  String cityChosenTo = '';
 
   double distanceBetween = 0.0;
 
@@ -99,7 +102,7 @@ class _MyMapState extends State<MyMap> {
                                 .toList(),
                           ),
                       },
-                      onLongPress: _addMarker,
+                      // onLongPress: _addMarker,
                     ),
                   ),
                   Positioned(
@@ -263,16 +266,23 @@ class _MyMapState extends State<MyMap> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue,
-          child: Icon(
-            Icons.add,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            show_add_dialog();
-          }),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+      floatingActionButton: SizedBox(
+        width: 70,
+        height: 70,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: FloatingActionButton(
+              backgroundColor: Colors.blue,
+              child: Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                show_add_dialog();
+              }),
+        ),
+      ),
     );
   }
 
@@ -364,15 +374,15 @@ class _MyMapState extends State<MyMap> {
       builder: (BuildContext context) {
         return CupertinoActionSheet(
           title: const Text('Nereden?'),
-          actions: turkishCitiesCoordinates.keys.map((String cityChosen) {
+          actions: turkishCitiesCoordinates.keys.map((cityChosenFrom) {
             return CupertinoActionSheetAction(
               onPressed: () {
                 setState(() {
-                  city_from = cityChosen;
+                  city_from = cityChosenFrom;
                 });
-                Navigator.pop(context, cityChosen);
+                Navigator.pop(context, cityChosenFrom);
               },
-              child: Text(cityChosen),
+              child: Text(cityChosenFrom),
             );
           }).toList(),
           cancelButton: CupertinoActionSheetAction(
@@ -392,15 +402,15 @@ class _MyMapState extends State<MyMap> {
       builder: (BuildContext context) {
         return CupertinoActionSheet(
           title: const Text('Nereye?'),
-          actions: turkishCitiesCoordinates.keys.map((String cityChosen) {
+          actions: turkishCitiesCoordinates.keys.map((cityChosenTo) {
             return CupertinoActionSheetAction(
               onPressed: () {
                 setState(() {
-                  city_to = cityChosen;
+                  city_to = cityChosenTo;
                 });
-                Navigator.pop(context, cityChosen);
+                Navigator.pop(context, cityChosenTo);
               },
-              child: Text(cityChosen),
+              child: Text(cityChosenTo),
             );
           }).toList(),
           cancelButton: CupertinoActionSheetAction(
@@ -419,6 +429,10 @@ class _MyMapState extends State<MyMap> {
       if (city_from == city_to) {
         setState(() {
           shakeButtons = true;
+          distanceBetween = 0.0;
+          city_to = '';
+          _destination = null;
+          _origin = null;
         });
 
         // Delay the restoration of the buttons
@@ -448,6 +462,17 @@ class _MyMapState extends State<MyMap> {
       );
     } else {
       // Show a message or handle the case when both cities are not selected
+
+      // if (_origin != null || _destination != null) {
+      //   LatLng orig = _origin!.position;
+      //   LatLng dest = _destination!.position;
+
+      //   setState(() {
+      //     cityChosenFrom = orig.toString();
+      //     cityChosenTo = dest.toString();
+      //     addOriginMarker(position);
+      //   });
+      // }
 
       // Shake the buttons temporarily
       setState(() {
@@ -487,6 +512,8 @@ class _MyMapState extends State<MyMap> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
+                print('hayır dedin');
+
                 Navigator.of(context).pop();
               },
               child: GFButton(
@@ -497,6 +524,7 @@ class _MyMapState extends State<MyMap> {
                 ),
                 color: Colors.red,
                 onPressed: () {
+                  print('hayır dedin2');
                   Navigator.of(context).pop(); // Dismiss dialog
                 },
               ),
@@ -514,6 +542,8 @@ class _MyMapState extends State<MyMap> {
                 ),
                 color: Colors.green,
                 onPressed: () {
+                  storeRouteInFirestore();
+
                   Navigator.of(context).pop(); // Dismiss dialog
                 },
               ),
@@ -522,5 +552,49 @@ class _MyMapState extends State<MyMap> {
         );
       },
     );
+  }
+
+  void storeRouteInFirestore() async {
+
+    rotaOlustur();
+    
+    // Access the latitude and longitude of the selected cities
+    LatLng originLatLng = turkishCitiesCoordinates[city_from]!;
+    LatLng destinationLatLng = turkishCitiesCoordinates[city_to]!;
+
+    // Convert LatLng objects to GeoPoint
+    GeoPoint originGeoPoint =
+        GeoPoint(originLatLng.latitude, originLatLng.longitude);
+    GeoPoint destinationGeoPoint =
+        GeoPoint(destinationLatLng.latitude, destinationLatLng.longitude);
+
+    // Query Firestore to check if a document with the same origin and destination already exists
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('routes')
+        .where('origin', isEqualTo: originGeoPoint)
+        .where('destination', isEqualTo: destinationGeoPoint)
+        .get();
+
+    // If a document with the same origin and destination already exists, notify the user
+    if (snapshot.docs.isNotEmpty) {
+      print('Route already exists in Firestore');
+      // You can show a snackbar, toast, or dialog to inform the user
+      return;
+    }
+
+    // Store data in Firestore
+    FirebaseFirestore.instance.collection('routes').add({
+      'origin': originGeoPoint,
+      'destination': destinationGeoPoint,
+      'city_from': city_from,
+      'city_to': city_to,
+    }).then((value) {
+      // Data stored successfully
+      print('Route added to Firestore');
+    }).catchError((error) {
+      // Error handling
+      print('Failed to add route: $error');
+    });
   }
 }

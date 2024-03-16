@@ -46,6 +46,7 @@ dependencies:
   flutter_polyline_points: ^2.0.0
   logger: ^2.1.0
   getwidget: ^4.0.0
+  cloud_firestore: ^4.15.9
 
 dev_dependencies:
   flutter_test:

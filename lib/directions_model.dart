@@ -3,26 +3,25 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Directions {
   final LatLngBounds bounds;
-  final String totalDuration;
+  final List<PointLatLng> polylinePoints;
   final String totalDistance;
-  final List<PointLatLng> polyLinePoints;
+  final String totalDuration;
 
   const Directions({
     required this.bounds,
-    required this.polyLinePoints,
-    required this.totalDuration,
+    required this.polylinePoints,
     required this.totalDistance,
+    required this.totalDuration,
   });
 
   factory Directions.fromMap(Map<String, dynamic> map) {
-    // check if route is not available
-    if ((map['routes'] as List).isEmpty) {
-      // return null;
-    }
+    // Check if route is not available
+    // if ((map['routes'] as List).isEmpty) return null; // TODO
 
+    // Get route information
     final data = Map<String, dynamic>.from(map['routes'][0]);
 
-    // bounds
+    // Bounds
     final northeast = data['bounds']['northeast'];
     final southwest = data['bounds']['southwest'];
     final bounds = LatLngBounds(
@@ -30,7 +29,7 @@ class Directions {
       southwest: LatLng(southwest['lat'], southwest['lng']),
     );
 
-    // distance & duration
+    // Distance & Duration
     String distance = '';
     String duration = '';
     if ((data['legs'] as List).isNotEmpty) {
@@ -41,7 +40,7 @@ class Directions {
 
     return Directions(
       bounds: bounds,
-      polyLinePoints:
+      polylinePoints:
           PolylinePoints().decodePolyline(data['overview_polyline']['points']),
       totalDistance: distance,
       totalDuration: duration,

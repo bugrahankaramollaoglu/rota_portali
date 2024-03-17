@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,15 +61,11 @@ class _RoutesListViewState extends State<RoutesListView> {
               final List<DocumentSnapshot> documents = snapshot.data!.docs;
 
               return ListView.builder(
-                itemCount: documents.length * 2 -
-                    1, // Double the item count to add dividers
+                // Use ListView.builder instead of ListView.separated
+                itemCount:
+                    documents.length, // Set the item count to documents.length
                 itemBuilder: (context, index) {
-                  // if (index.isOdd) {
-                  //   return Divider(); // Add a divider for odd indices
-                  // }
-
-                  final int itemIndex = index ~/ 2;
-                  final DocumentSnapshot document = documents[itemIndex];
+                  final DocumentSnapshot document = documents[index];
                   final cityFrom =
                       document.exists && document['city_from'] != null
                           ? document['city_from']
@@ -85,7 +83,7 @@ class _RoutesListViewState extends State<RoutesListView> {
                   final destination = document['destination'] ?? GeoPoint(0, 0);
 
                   // Check if this item is expanded
-                  bool isExpanded = _expandedIndex == itemIndex;
+                  bool isExpanded = _expandedIndex == index;
 
                   // Create a new set of markers for this list item
                   Set<Marker> markers = {};
@@ -117,16 +115,14 @@ class _RoutesListViewState extends State<RoutesListView> {
                   // Create a new set of polylines for this list item
                   Set<Polyline> polylines = {};
 
-                  // Add a polyline between origin and destination
+                  // Add a polyline with wavy effect between origin and destination
                   polylines.add(
                     Polyline(
-                      polylineId: PolylineId('polyline$itemIndex'),
-                      color: Colors.blue, // Polyline color
-                      width: 3, // Polyline width
-                      points: [
-                        LatLng(origin.latitude, origin.longitude),
-                        LatLng(destination.latitude, destination.longitude)
-                      ],
+                      polylineId: PolylineId('polyline$index'),
+                      color: Colors.blue,
+                      width: 3,
+                      points: _getWavyPoints(origin.latitude, origin.longitude,
+                          destination.latitude, destination.longitude),
                     ),
                   );
 
@@ -143,7 +139,7 @@ class _RoutesListViewState extends State<RoutesListView> {
                           // Handle item click here
                           setState(() {
                             // Update the expanded index to this item's index
-                            _expandedIndex = isExpanded ? null : itemIndex;
+                            _expandedIndex = isExpanded ? null : index;
                           });
                           print('Item clicked: $cityFrom - $cityTo');
                         },
@@ -182,8 +178,8 @@ class _RoutesListViewState extends State<RoutesListView> {
                                     zoomControlsEnabled: true,
                                     initialCameraPosition:
                                         _initialCameraPosition,
-                                    markers: _markersList[itemIndex],
-                                    polylines: _polylinesList[itemIndex],
+                                    markers: _markersList[index],
+                                    polylines: _polylinesList[index],
                                   ),
                                 ),
                               ),
@@ -217,5 +213,33 @@ class _RoutesListViewState extends State<RoutesListView> {
         ),
       ),
     );
+  }
+
+  // Function to generate wavy points
+  List<LatLng> _getWavyPoints(
+      double startLat, double startLng, double endLat, double endLng) {
+    List<LatLng> points = [];
+    final double totalDistance =
+        sqrt(pow(endLat - startLat, 2) + pow(endLng - startLng, 2));
+    final double segmentLength = totalDistance /
+        50; // Divide total distance into 50 segments for more waves
+    final double midPointLat = (startLat + endLat) / 2;
+    final double midPointLng = (startLng + endLng) / 2;
+
+    // Generate wavy points using a sine wave function with higher frequency and amplitude
+    for (double t = 0; t <= 1; t += 0.01) {
+      // Increase step size for more points
+      final double offsetX = sin(t * pi * 10) *
+          segmentLength *
+          0.1; // Adjust divisor and multiplier to control wave amplitude and frequency
+      final double offsetY = cos(t * pi * 10) *
+          segmentLength *
+          0.1; // Adjust divisor and multiplier to control wave amplitude and frequency
+      final double lat = startLat + (endLat - startLat) * t + offsetX;
+      final double lng = startLng + (endLng - startLng) * t + offsetY;
+      points.add(LatLng(lat, lng));
+    }
+
+    return points;
   }
 }

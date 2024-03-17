@@ -767,6 +767,7 @@ class _MyMapState extends State<MyMap> {
       'guvenilir': guvenilir,
       'rahatUlasim': rahatUlasim,
       'keyifli': keyifli,
+      'distance': distanceBetween,
     }).then((value) {
       _showToast('Rota eklendi!');
     }).catchError((error) {

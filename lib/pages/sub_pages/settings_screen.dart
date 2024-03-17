@@ -133,7 +133,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 280),
+                // SizedBox(height: 200),
                 _logoutButton(),
               ],
             ),

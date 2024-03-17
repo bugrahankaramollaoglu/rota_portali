@@ -12,20 +12,25 @@ class RoutesListView extends StatefulWidget {
 
 class _RoutesListViewState extends State<RoutesListView> {
   int? _expandedIndex; // Index of the currently expanded item
+  List<Set<Marker>> _markersList =
+      []; // List to hold markers for each list item
+
+  List<Set<Polyline>> _polylinesList =
+      []; // List to hold polylines for each list item
 
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(
-      41.0086,
-      28.9802,
+      39.2933,
+      35.2374,
     ),
-    zoom: 8,
+    zoom: 4.5,
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Firestore ListView Example'),
+        title: Center(child: Text('Anasayfa')), // Center-align the title text
         backgroundColor: Colors.deepPurpleAccent, // Set app bar color to purple
       ),
       body: Container(
@@ -52,10 +57,17 @@ class _RoutesListViewState extends State<RoutesListView> {
               );
             } else {
               final List<DocumentSnapshot> documents = snapshot.data!.docs;
+
               return ListView.builder(
-                itemCount: documents.length,
+                itemCount: documents.length * 2 -
+                    1, // Double the item count to add dividers
                 itemBuilder: (context, index) {
-                  final DocumentSnapshot document = documents[index];
+                  // if (index.isOdd) {
+                  //   return Divider(); // Add a divider for odd indices
+                  // }
+
+                  final int itemIndex = index ~/ 2;
+                  final DocumentSnapshot document = documents[itemIndex];
                   final cityFrom =
                       document.exists && document['city_from'] != null
                           ? document['city_from']
@@ -73,7 +85,53 @@ class _RoutesListViewState extends State<RoutesListView> {
                   final destination = document['destination'] ?? GeoPoint(0, 0);
 
                   // Check if this item is expanded
-                  bool isExpanded = _expandedIndex == index;
+                  bool isExpanded = _expandedIndex == itemIndex;
+
+                  // Create a new set of markers for this list item
+                  Set<Marker> markers = {};
+
+                  // Add marker for cityFrom and cityTo if they are not empty
+                  if (cityFrom.isNotEmpty) {
+                    markers.add(
+                      Marker(
+                        markerId: MarkerId(cityFrom),
+                        position: LatLng(origin.latitude, origin.longitude),
+                        infoWindow: InfoWindow(title: cityFrom),
+                      ),
+                    );
+                  }
+                  if (cityTo.isNotEmpty) {
+                    markers.add(
+                      Marker(
+                        markerId: MarkerId(cityTo),
+                        position:
+                            LatLng(destination.latitude, destination.longitude),
+                        infoWindow: InfoWindow(title: cityTo),
+                      ),
+                    );
+                  }
+
+                  // Add the set of markers to the list of marker sets
+                  _markersList.add(markers);
+
+                  // Create a new set of polylines for this list item
+                  Set<Polyline> polylines = {};
+
+                  // Add a polyline between origin and destination
+                  polylines.add(
+                    Polyline(
+                      polylineId: PolylineId('polyline$itemIndex'),
+                      color: Colors.blue, // Polyline color
+                      width: 3, // Polyline width
+                      points: [
+                        LatLng(origin.latitude, origin.longitude),
+                        LatLng(destination.latitude, destination.longitude)
+                      ],
+                    ),
+                  );
+
+                  // Add the set of polylines to the list of polyline sets
+                  _polylinesList.add(polylines);
 
                   // You can use these fields to build your UI
                   return Padding(
@@ -85,7 +143,7 @@ class _RoutesListViewState extends State<RoutesListView> {
                           // Handle item click here
                           setState(() {
                             // Update the expanded index to this item's index
-                            _expandedIndex = isExpanded ? null : index;
+                            _expandedIndex = isExpanded ? null : itemIndex;
                           });
                           print('Item clicked: $cityFrom - $cityTo');
                         },
@@ -119,19 +177,13 @@ class _RoutesListViewState extends State<RoutesListView> {
                                 child: Container(
                                   width: 300,
                                   height: 150,
-                                  child: const GoogleMap(
+                                  child: GoogleMap(
                                     myLocationButtonEnabled: true,
                                     zoomControlsEnabled: true,
                                     initialCameraPosition:
                                         _initialCameraPosition,
-                                    // mapType: _currentMapType,
-                                    // onMapCreated: (controller) =>
-                                    //     _googleMapController = controller,
-                                    // markers: {
-                                    //   if (_origin != null) _origin!,
-                                    //   if (_destination != null) _destination!
-                                    // },
-                                    // polylines: Set<Polyline>.of(_polylines),
+                                    markers: _markersList[itemIndex],
+                                    polylines: _polylinesList[itemIndex],
                                   ),
                                 ),
                               ),

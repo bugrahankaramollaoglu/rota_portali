@@ -5,20 +5,20 @@ import 'package:backpack_pal/pages/sub_pages/stats_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+// void main() {
+//   runApp(const MyApp());
+// }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       home: HomePage(),
+//     );
+//   }
+// }
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,7 +28,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
     const Stats_Screen(),

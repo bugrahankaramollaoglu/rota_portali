@@ -587,7 +587,7 @@ class _MyMapState extends State<MyMap> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'GÜVENİLİR',
+                      'Güvenilir',
                       style: GoogleFonts.roboto(
                         fontSize: 22,
                       ),
@@ -620,7 +620,7 @@ class _MyMapState extends State<MyMap> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'KEYİFLİ',
+                      'Keyifli',
                       style: GoogleFonts.roboto(
                         fontSize: 22,
                       ),
@@ -653,7 +653,7 @@ class _MyMapState extends State<MyMap> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'RAHAT ULAŞIM',
+                      'Rahat Ulaşım',
                       style: GoogleFonts.roboto(
                         fontSize: 22,
                       ),
@@ -739,8 +739,12 @@ class _MyMapState extends State<MyMap> {
 
     String? userEmail = await getUserEmail();
 
-    if (userEmail == null) {
-      print('User email is null');
+    if (userEmail == null ||
+        guvenilir == 0 ||
+        rahatUlasim == 0 ||
+        keyifli == 0 ||
+        distanceBetween == 0.0) {
+      _showToast('Bilgileri Doldurunuz.');
       return;
     }
 

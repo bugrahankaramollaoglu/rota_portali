@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RoutesListView extends StatefulWidget {
   const RoutesListView({Key? key});
@@ -11,6 +12,14 @@ class RoutesListView extends StatefulWidget {
 
 class _RoutesListViewState extends State<RoutesListView> {
   int? _expandedIndex; // Index of the currently expanded item
+
+  static const _initialCameraPosition = CameraPosition(
+    target: LatLng(
+      41.0086,
+      28.9802,
+    ),
+    zoom: 8,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -49,29 +58,22 @@ class _RoutesListViewState extends State<RoutesListView> {
                 bool isExpanded = _expandedIndex == index;
 
                 // You can use these fields to build your UI
-                return GestureDetector(
-                  onTap: () {
-                    // Handle item click here
-                    setState(() {
-                      // Update the expanded index to this item's index
-                      _expandedIndex = isExpanded ? null : index;
-                    });
-                    print('Item clicked: $cityFrom - $cityTo');
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blueGrey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Card(
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
+                  child: Card(
+                    elevation: 5,
+                    child: GestureDetector(
+                      onTap: () {
+                        // Handle item click here
+                        setState(() {
+                          // Update the expanded index to this item's index
+                          _expandedIndex = isExpanded ? null : index;
+                        });
+                        print('Item clicked: $cityFrom - $cityTo');
+                      },
                       child: ExpansionTile(
                         leading: CircleAvatar(
-                          backgroundColor: Colors.orange,
+                          backgroundColor: Colors.deepPurpleAccent,
                           child: Text(
                             '${fromWhom[0].toUpperCase()}',
                             style: const TextStyle(
@@ -88,16 +90,48 @@ class _RoutesListViewState extends State<RoutesListView> {
                           ),
                         ),
                         subtitle: Text('Yükleyen: $fromWhom'),
-                        // Add more fields as needed
-                        children: <Widget>[
-                          // Additional widgets revealed when expanded
-                          Text('Guvenilir: $guvenilir'),
-                          Text('Keyifli: $keyifli'),
-                          Text('Rahat Ulaşım: $rahatUlasim'),
-                          Text('Mesafe: $distance km'),
-                        ],
                         // Initially expanded if this item is the expanded one
                         initiallyExpanded: isExpanded,
+                        // Add more fields as needed
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Container(
+                              width: 250,
+                              height: 250,
+                              child: GoogleMap(
+                                myLocationButtonEnabled: true,
+                                zoomControlsEnabled: true,
+                                initialCameraPosition: _initialCameraPosition,
+                                // mapType: _currentMapType,
+                                // onMapCreated: (controller) =>
+                                //     _googleMapController = controller,
+                                // markers: {
+                                //   if (_origin != null) _origin!,
+                                //   if (_destination != null) _destination!
+                                // },
+                                // polylines: Set<Polyline>.of(_polylines),
+                              ),
+                            ),
+                          ),
+                          // Additional widgets revealed when expanded
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Güvenilir: $guvenilir'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Keyifli: $keyifli'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Rahat Ulaşım: $rahatUlasim'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Mesafe: $distance km'),
+                          ),
+                        ],
                       ),
                     ),
                   ),

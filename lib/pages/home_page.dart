@@ -90,42 +90,7 @@ class _HomePageState extends State<HomePage> {
             // Diğer butonlara göre işlemler buraya eklenebilir
           }
         },
-      ), /* Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width *
-                0.8, // Adjust the width as needed
-            child: const Divider(
-              height: 2,
-              thickness: 2,
-              color: Colors.black, // Adjust color as needed
-            ),
-          ),
-          BottomNavigationBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.route_rounded, size: 30),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_rounded, size: 30),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings_rounded, size: 30),
-                label: '',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-            // showSelectedLabels: false, // Hide labels for selected items
-            showUnselectedLabels: false, // Hide labels for unselected items
-          ),
-        ],
-      ), */
+      ),
     );
   }
 }

@@ -45,9 +45,14 @@ class _MyMapState extends State<MyMap> {
   );
 
   late GoogleMapController _googleMapController;
+  MapType _currentMapType = MapType.normal;
+  List<String> _mapTypeOptions = ['Normal', 'Terrain', 'Satellite', 'Hybrid'];
+
   Marker? _origin;
   Marker? _destination;
   Directions? _info;
+
+  String? _mapStyle = '';
 
   @override
   void dispose() {
@@ -64,7 +69,39 @@ class _MyMapState extends State<MyMap> {
         appBar: AppBar(
           centerTitle: false,
           title: const Text('   Google Maps'),
-          actions: const [],
+          actions: [
+            DropdownButton(
+              icon: Icon(Icons.layers),
+              value: _currentMapType.toString(),
+              items: [
+                DropdownMenuItem(
+                  value: MapType.normal.toString(),
+                  child: Text('Normal '),
+                ),
+                DropdownMenuItem(
+                  value: MapType.terrain.toString(),
+                  child: Text('Terrain '),
+                ),
+                DropdownMenuItem(
+                  value: MapType.satellite.toString(),
+                  child: Text('Satellite '),
+                ),
+                DropdownMenuItem(
+                  value: MapType.hybrid.toString(),
+                  child: Text('Hybrid '),
+                ),
+              ],
+              onChanged: (String? newValue) {
+                setState(() {
+                  _currentMapType = newValue != null
+                      ? MapType.values
+                          .firstWhere((type) => type.toString() == newValue)
+                      : MapType.normal;
+                });
+              },
+            ),
+            SizedBox(width: 40),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
@@ -87,6 +124,7 @@ class _MyMapState extends State<MyMap> {
                         myLocationButtonEnabled: true,
                         zoomControlsEnabled: true,
                         initialCameraPosition: _initialCameraPosition,
+                        mapType: _currentMapType, // map tipi
                         onMapCreated: (controller) =>
                             _googleMapController = controller,
                         markers: {
@@ -191,7 +229,7 @@ class _MyMapState extends State<MyMap> {
                     width: 100,
                     height: 50,
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 20),
                   // if (_destination != null)
                   TextButton(
                     onPressed: () {
@@ -323,6 +361,18 @@ class _MyMapState extends State<MyMap> {
         ),
       ),
     );
+  }
+
+  void _changeMapType(String? selectedMapType) {
+    // if (selectedMapType == 'Normal') {
+    //   _googleMapController.setMapType(MapType.normal);
+    // } else if (selectedMapType == 'Terrain') {
+    //   _googleMapController.setMapType(MapType.terrain);
+    // } else if (selectedMapType == 'Satellite') {
+    //   _googleMapController.setMapType(MapType.satellite);
+    // } else if (selectedMapType == 'Hybrid') {
+    //   _googleMapController.setMapType(MapType.hybrid);
+    // }
   }
 
   double calculateDistance(LatLng from, LatLng to) {

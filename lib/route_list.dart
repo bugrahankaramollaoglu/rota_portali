@@ -94,26 +94,26 @@ class _RoutesListViewState extends State<RoutesListView> {
                         initiallyExpanded: isExpanded,
                         // Add more fields as needed
                         children: <Widget>[
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20.0),
-                            child: Container(
-                              width: 250,
-                              height: 250,
-                              child: GoogleMap(
-                                myLocationButtonEnabled: true,
-                                zoomControlsEnabled: true,
-                                initialCameraPosition: _initialCameraPosition,
-                                // mapType: _currentMapType,
-                                // onMapCreated: (controller) =>
-                                //     _googleMapController = controller,
-                                // markers: {
-                                //   if (_origin != null) _origin!,
-                                //   if (_destination != null) _destination!
-                                // },
-                                // polylines: Set<Polyline>.of(_polylines),
-                              ),
-                            ),
-                          ),
+                          // ClipRRect(
+                          //   borderRadius: BorderRadius.circular(20.0),
+                          //   child: Container(
+                          //     width: 250,
+                          //     height: 250,
+                          //     child: const GoogleMap(
+                          //       myLocationButtonEnabled: true,
+                          //       zoomControlsEnabled: true,
+                          //       initialCameraPosition: _initialCameraPosition,
+                          //       // mapType: _currentMapType,
+                          //       // onMapCreated: (controller) =>
+                          //       //     _googleMapController = controller,
+                          //       // markers: {
+                          //       //   if (_origin != null) _origin!,
+                          //       //   if (_destination != null) _destination!
+                          //       // },
+                          //       // polylines: Set<Polyline>.of(_polylines),
+                          //     ),
+                          //   ),
+                          // ),
                           // Additional widgets revealed when expanded
                           Padding(
                             padding: const EdgeInsets.all(8.0),

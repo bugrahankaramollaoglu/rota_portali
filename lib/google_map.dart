@@ -91,7 +91,7 @@ class _MyMapState extends State<MyMap> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: const Text('   Google Maps'),
+          title: const Text('   Google Harita'),
           actions: [
             DropdownButton(
               icon: const Icon(Icons.layers),
@@ -126,236 +126,238 @@ class _MyMapState extends State<MyMap> {
             const SizedBox(width: 40),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25.0),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 4.0,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25.0),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 4.0,
+                    ),
+                  ),
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: GoogleMap(
+                          myLocationButtonEnabled: true,
+                          zoomControlsEnabled: true,
+                          initialCameraPosition: _initialCameraPosition,
+                          mapType: _currentMapType,
+                          onMapCreated: (controller) =>
+                              _googleMapController = controller,
+                          markers: {
+                            if (_origin != null) _origin!,
+                            if (_destination != null) _destination!
+                          },
+                          polylines: Set<Polyline>.of(_polylines),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 17.0,
+                        right: 60.0,
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: FloatingActionButton(
+                            backgroundColor: Colors.white.withOpacity(0.9),
+                            foregroundColor: Colors.black,
+                            onPressed: () {
+                              if (_info != null) {
+                                _googleMapController.animateCamera(
+                                  CameraUpdate.newLatLngBounds(
+                                      _info!.bounds, 100.0),
+                                );
+                              } else {
+                                _googleMapController.animateCamera(
+                                  CameraUpdate.newCameraPosition(
+                                      _initialCameraPosition),
+                                );
+                              }
+                            },
+                            child: const Icon(Icons.center_focus_strong),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                height: MediaQuery.of(context).size.height / 2,
-                child: Stack(
+                if (_info != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Positioned(
+                      top: 20.0,
+                      child: Container(),
+                    ),
+                  ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: GoogleMap(
-                        myLocationButtonEnabled: true,
-                        zoomControlsEnabled: true,
-                        initialCameraPosition: _initialCameraPosition,
-                        mapType: _currentMapType,
-                        onMapCreated: (controller) =>
-                            _googleMapController = controller,
-                        markers: {
-                          if (_origin != null) _origin!,
-                          if (_destination != null) _destination!
-                        },
-                        polylines: Set<Polyline>.of(_polylines),
+                    TextButton(
+                      onPressed: () {
+                        if (_origin != null) {
+                          _googleMapController.animateCamera(
+                            CameraUpdate.newCameraPosition(
+                              CameraPosition(
+                                target: _origin!.position,
+                                zoom: 10,
+                                tilt: 50.0,
+                              ),
+                            ),
+                          );
+                        } else {
+                          setState(() {
+                            shakeButtons = true;
+                          });
+
+                          Future.delayed(const Duration(milliseconds: 500), () {
+                            setState(() {
+                              shakeButtons = false;
+                            });
+                          });
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.green,
+                        textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.gps_fixed),
+                          SizedBox(width: 8),
+                          Text('NEREDEN'),
+                        ],
                       ),
                     ),
-                    Positioned(
-                      bottom: 17.0,
-                      right: 60.0,
-                      child: Opacity(
-                        opacity: 0.7,
-                        child: FloatingActionButton(
-                          backgroundColor: Colors.white.withOpacity(0.9),
-                          foregroundColor: Colors.black,
-                          onPressed: () {
-                            if (_info != null) {
-                              _googleMapController.animateCamera(
-                                CameraUpdate.newLatLngBounds(
-                                    _info!.bounds, 100.0),
-                              );
-                            } else {
-                              _googleMapController.animateCamera(
-                                CameraUpdate.newCameraPosition(
-                                    _initialCameraPosition),
-                              );
-                            }
-                          },
-                          child: const Icon(Icons.center_focus_strong),
-                        ),
+                    Image.asset(
+                      'assets/route.png',
+                      width: 80,
+                      height: 50,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if (_destination != null) {
+                          _googleMapController.animateCamera(
+                            CameraUpdate.newCameraPosition(
+                              CameraPosition(
+                                target: _destination!.position,
+                                zoom: 10,
+                                tilt: 50.0,
+                              ),
+                            ),
+                          );
+                        } else {
+                          setState(() {
+                            shakeButtons = true;
+                          });
+
+                          Future.delayed(const Duration(milliseconds: 500), () {
+                            setState(() {
+                              shakeButtons = false;
+                            });
+                          });
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blue,
+                        textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.location_on_rounded),
+                          SizedBox(width: 8),
+                          Text('NEREYE'),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-              if (_info != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Positioned(
-                    top: 20.0,
-                    child: Container(),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      constraints: const BoxConstraints(minWidth: 120),
+                      child: GFButton(
+                        onPressed: chooseFrom,
+                        text: _truncateCityName(city_from),
+                        color: shakeButtons && city_from.isEmpty
+                            ? Colors.red
+                            : Colors.black,
+                        type: GFButtonType.outline2x,
+                        size: GFSize.LARGE,
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.arrow_forward_ios_rounded),
+                    ),
+                    Container(
+                      constraints: const BoxConstraints(minWidth: 120),
+                      child: GFButton(
+                        onPressed: chooseTo,
+                        text: _truncateCityName(city_to),
+                        color: shakeButtons && city_to.isEmpty
+                            ? Colors.red
+                            : Colors.black,
+                        type: GFButtonType.outline2x,
+                        size: GFSize.LARGE,
+                      ),
+                    ),
+                  ],
                 ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      if (_origin != null) {
-                        _googleMapController.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: _origin!.position,
-                              zoom: 10,
-                              tilt: 50.0,
-                            ),
-                          ),
-                        );
-                      } else {
-                        setState(() {
-                          shakeButtons = true;
-                        });
-
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          setState(() {
-                            shakeButtons = false;
-                          });
-                        });
-                      }
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.green,
-                      textStyle: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.gps_fixed),
-                        SizedBox(width: 8),
-                        Text('NEREDEN'),
-                      ],
-                    ),
-                  ),
-                  Image.asset(
-                    'assets/route.png',
-                    width: 100,
-                    height: 50,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      if (_destination != null) {
-                        _googleMapController.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: _destination!.position,
-                              zoom: 10,
-                              tilt: 50.0,
-                            ),
-                          ),
-                        );
-                      } else {
-                        setState(() {
-                          shakeButtons = true;
-                        });
-
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          setState(() {
-                            shakeButtons = false;
-                          });
-                        });
-                      }
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      textStyle: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.location_on_rounded),
-                        SizedBox(width: 8),
-                        Text('NEREYE'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    constraints: const BoxConstraints(minWidth: 150),
-                    child: GFButton(
-                      onPressed: chooseFrom,
-                      text: _truncateCityName(city_from),
-                      color: shakeButtons && city_from.isEmpty
-                          ? Colors.red
-                          : Colors.black,
-                      type: GFButtonType.outline2x,
-                      size: GFSize.LARGE,
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.arrow_forward_ios_rounded),
-                  ),
-                  Container(
-                    constraints: const BoxConstraints(minWidth: 150),
-                    child: GFButton(
-                      onPressed: chooseTo,
-                      text: _truncateCityName(city_to),
-                      color: shakeButtons && city_to.isEmpty
-                          ? Colors.red
-                          : Colors.black,
-                      type: GFButtonType.outline2x,
-                      size: GFSize.LARGE,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '$distanceBetween km',
-                    style: TextStyle(
-                      fontFamily: GoogleFonts.allerta().fontFamily,
-                      fontSize: 30,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 35),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GFButton(
-                      onPressed: rotaOlustur,
-                      text: "ROTA HESAPLA",
-                      textStyle: TextStyle(
-                        fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '$distanceBetween km',
+                      style: TextStyle(
+                        fontFamily: GoogleFonts.allerta().fontFamily,
+                        fontSize: 30,
                         color: Colors.black,
                       ),
-                      icon: const Icon(Icons.nordic_walking_outlined),
-                      color: Colors.green,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GFButton(
-                      onPressed: show_add_dialog,
-                      text: "ROTA OLUŞTUR",
-                      textStyle: TextStyle(
-                        fontFamily: GoogleFonts.luckiestGuy().fontFamily,
-                        color: Colors.black,
+                  ],
+                ),
+                const SizedBox(height: 35),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GFButton(
+                        onPressed: rotaOlustur,
+                        text: "ROTA HESAPLA",
+                        textStyle: TextStyle(
+                          fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                          color: Colors.black,
+                        ),
+                        icon: const Icon(Icons.nordic_walking_outlined),
+                        color: Colors.green,
                       ),
-                      icon: const Icon(Icons.add),
-                      color: Colors.blue,
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GFButton(
+                        onPressed: show_add_dialog,
+                        text: "ROTA OLUŞTUR",
+                        textStyle: TextStyle(
+                          fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                          color: Colors.black,
+                        ),
+                        icon: const Icon(Icons.add),
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
@@ -603,7 +605,7 @@ class _MyMapState extends State<MyMap> {
                       direction: Axis.horizontal,
                       allowHalfRating: true,
                       itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      // itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                       itemBuilder: (context, _) => const Icon(
                         Icons.star_rounded,
                         color: Colors.deepPurpleAccent,
@@ -636,7 +638,7 @@ class _MyMapState extends State<MyMap> {
                       direction: Axis.horizontal,
                       allowHalfRating: true,
                       itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      // itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                       itemBuilder: (context, _) => const Icon(
                         Icons.star_rounded,
                         color: Colors.deepPurpleAccent,
@@ -669,7 +671,7 @@ class _MyMapState extends State<MyMap> {
                       direction: Axis.horizontal,
                       allowHalfRating: true,
                       itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      // itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                       itemBuilder: (context, _) => const Icon(
                         Icons.star_rounded,
                         color: Colors.deepPurpleAccent,

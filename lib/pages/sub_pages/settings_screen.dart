@@ -29,7 +29,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
   }
 
   // Future<void> loadThemePreference() async {
-  //   // Retrieve theme preference from shared preferences
+  //   /P/ Retrieve theme preference from shared preferences
   //   bool themePreference = await loadShared('theme-key');
   //   setState(() {
   //     themeFlag = themePreference;
@@ -81,56 +81,64 @@ class _Settings_ScreenState extends State<Settings_Screen> {
                 },
               ), */
         _divider(),
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Text(
-                'CHOOSE A THEME',
-                style: GoogleFonts.roboto(fontSize: 20),
-              ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: Text(
+                        'CHOOSE A THEME',
+                        style: GoogleFonts.roboto(fontSize: 20),
+                      ),
+                    ),
+                    SizedBox(width: 30),
+                    _themeSwitch(),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: Text(
+                        'SET NOTIFICATIONS',
+                        style: GoogleFonts.roboto(fontSize: 20),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    _notificationSwitch(),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: Text(
+                        'RESET STATISTICS',
+                        style: GoogleFonts.roboto(fontSize: 20),
+                      ),
+                    ),
+                    SizedBox(width: 30),
+                    GestureDetector(
+                      onTap: () {
+                        print("Button tapped");
+                      },
+                      child: Image.asset(
+                        'assets/reset_button.png',
+                        width: 60,
+                        height: 60,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 280),
+                _logoutButton(),
+              ],
             ),
-            const SizedBox(width: 30),
-            _themeSwitch(),
-          ],
+          ),
         ),
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Text(
-                'SET NOTIFICATIONS',
-                style: GoogleFonts.roboto(fontSize: 20),
-              ),
-            ),
-            const SizedBox(width: 10),
-            _notificationSwitch(),
-          ],
-        ),
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Text(
-                'RESET STATISTICS',
-                style: GoogleFonts.roboto(fontSize: 20),
-              ),
-            ),
-            const SizedBox(width: 30),
-            GestureDetector(
-              onTap: () {
-                print("Button tapped");
-              },
-              child: Image.asset(
-                'assets/reset_button.png',
-                width: 60,
-                height: 60,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 280),
-        _logoutButton(),
       ],
     );
   }

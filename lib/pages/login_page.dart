@@ -218,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _appImage() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(35, 0, 35, 0),
-      child: Image.asset('assets/logo.png'),
+      child: Image.asset('assets/app_logo.png'),
     );
   }
 
@@ -238,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _appName() {
     return Container(
       child: Text(
-        'rota',
+        'rota\n    portalı.',
         style: GoogleFonts.arvo(fontSize: 30),
       ),
     );

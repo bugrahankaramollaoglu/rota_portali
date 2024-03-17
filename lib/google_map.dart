@@ -213,7 +213,7 @@ class _MyMapState extends State<MyMap> {
                       children: [
                         Icon(Icons.gps_fixed),
                         SizedBox(width: 8),
-                        Text('FROM'),
+                        Text('NEREDEN'),
                       ],
                     ),
                   ),
@@ -223,7 +223,7 @@ class _MyMapState extends State<MyMap> {
                     width: 100,
                     height: 50,
                   ),
-                  const SizedBox(width: 20),
+                  // const SizedBox(width: 10),
                   // if (_destination != null)
                   TextButton(
                     onPressed: () {
@@ -258,7 +258,7 @@ class _MyMapState extends State<MyMap> {
                       children: [
                         Icon(Icons.location_on_rounded),
                         SizedBox(width: 8),
-                        Text('TO'),
+                        Text('NEREYE'),
                       ],
                     ),
                   ),
@@ -357,18 +357,6 @@ class _MyMapState extends State<MyMap> {
     );
   }
 
-  void _changeMapType(String? selectedMapType) {
-    // if (selectedMapType == 'Normal') {
-    //   _googleMapController.setMapType(MapType.normal);
-    // } else if (selectedMapType == 'Terrain') {
-    //   _googleMapController.setMapType(MapType.terrain);
-    // } else if (selectedMapType == 'Satellite') {
-    //   _googleMapController.setMapType(MapType.satellite);
-    // } else if (selectedMapType == 'Hybrid') {
-    //   _googleMapController.setMapType(MapType.hybrid);
-    // }
-  }
-
   double calculateDistance(LatLng from, LatLng to) {
     const double earthRadius = 6371.0; // Radius of the Earth in kilometers
 
@@ -399,7 +387,7 @@ class _MyMapState extends State<MyMap> {
     setState(() {
       _origin = Marker(
         markerId: const MarkerId('origin'),
-        infoWindow: const InfoWindow(title: 'Origin'),
+        infoWindow: const InfoWindow(title: 'Nereden'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
         position: position,
       );
@@ -414,7 +402,7 @@ class _MyMapState extends State<MyMap> {
     setState(() {
       _destination = Marker(
         markerId: const MarkerId('destination'),
-        infoWindow: const InfoWindow(title: 'Destination'),
+        infoWindow: const InfoWindow(title: 'Nereye'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
         position: position,
       );

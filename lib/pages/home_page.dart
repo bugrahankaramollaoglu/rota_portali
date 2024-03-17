@@ -2,6 +2,7 @@ import 'package:backpack_pal/auth.dart';
 import 'package:backpack_pal/pages/sub_pages/home_screen.dart';
 import 'package:backpack_pal/pages/sub_pages/settings_screen.dart';
 import 'package:backpack_pal/pages/sub_pages/stats_screen.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -60,7 +61,36 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: Column(
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.deepPurple, // Arka plan rengi
+        color: Colors.white, // Icon renkleri
+        buttonBackgroundColor: Colors.deepPurple[100], // Buton rengi
+        height: 60, // Bottom bar yüksekliği
+        items: <Widget>[
+          Icon(Icons.route_rounded, size: 30),
+          Icon(Icons.home, size: 30),
+          Icon(Icons.settings_rounded, size: 30),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              setState(() {
+                _selectedIndex = 0;
+              });
+            case 1:
+              setState(() {
+                _selectedIndex = 1;
+              });
+            case 2:
+              setState(() {
+                _selectedIndex = 2;
+              });
+
+              break;
+            // Diğer butonlara göre işlemler buraya eklenebilir
+          }
+        },
+      ), /* Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
@@ -95,12 +125,7 @@ class _HomePageState extends State<HomePage> {
             showUnselectedLabels: false, // Hide labels for unselected items
           ),
         ],
-      ),
+      ), */
     );
   }
 }
-
-
-
-
-

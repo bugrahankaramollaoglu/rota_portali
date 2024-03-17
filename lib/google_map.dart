@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/size/gf_size.dart';
 import 'package:getwidget/types/gf_button_type.dart';
@@ -64,8 +66,6 @@ class _MyMapState extends State<MyMap> {
 
   @override
   Widget build(BuildContext context) {
-    // Future<String?> user_email = getUserEmail();
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -126,17 +126,14 @@ class _MyMapState extends State<MyMap> {
                         myLocationButtonEnabled: true,
                         zoomControlsEnabled: true,
                         initialCameraPosition: _initialCameraPosition,
-                        mapType: _currentMapType, // map tipi
+                        mapType: _currentMapType,
                         onMapCreated: (controller) =>
                             _googleMapController = controller,
                         markers: {
                           if (_origin != null) _origin!,
                           if (_destination != null) _destination!
                         },
-                        polylines: Set<Polyline>.of(
-                            _polylines), // Include polylines here
-
-                        // onLongPress: _addMarker,
+                        polylines: Set<Polyline>.of(_polylines),
                       ),
                     ),
                     Positioned(
@@ -179,7 +176,6 @@ class _MyMapState extends State<MyMap> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // if (_origin != null)
                   TextButton(
                     onPressed: () {
                       if (_origin != null) {
@@ -197,7 +193,6 @@ class _MyMapState extends State<MyMap> {
                           shakeButtons = true;
                         });
 
-                        // Delay the restoration of the buttons
                         Future.delayed(const Duration(milliseconds: 500), () {
                           setState(() {
                             shakeButtons = false;
@@ -217,14 +212,11 @@ class _MyMapState extends State<MyMap> {
                       ],
                     ),
                   ),
-                  // const SizedBox(width: 110),
                   Image.asset(
                     'assets/route.png',
                     width: 100,
                     height: 50,
                   ),
-                  // const SizedBox(width: 10),
-                  // if (_destination != null)
                   TextButton(
                     onPressed: () {
                       if (_destination != null) {
@@ -242,7 +234,6 @@ class _MyMapState extends State<MyMap> {
                           shakeButtons = true;
                         });
 
-                        // Delay the restoration of the buttons
                         Future.delayed(const Duration(milliseconds: 500), () {
                           setState(() {
                             shakeButtons = false;
@@ -268,15 +259,13 @@ class _MyMapState extends State<MyMap> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    constraints: const BoxConstraints(
-                        minWidth: 150), // Adjust the minWidth as needed
+                    constraints: const BoxConstraints(minWidth: 150),
                     child: GFButton(
                       onPressed: chooseFrom,
                       text: _truncateCityName(city_from),
                       color: shakeButtons && city_from.isEmpty
                           ? Colors.red
                           : Colors.black,
-                      // icon: Icon(Icons.gps_fixed_rounded),
                       type: GFButtonType.outline2x,
                       size: GFSize.LARGE,
                     ),
@@ -286,35 +275,15 @@ class _MyMapState extends State<MyMap> {
                     child: Icon(Icons.arrow_forward_ios_rounded),
                   ),
                   Container(
-                    constraints: const BoxConstraints(
-                        minWidth: 150), // Adjust the minWidth as needed
+                    constraints: const BoxConstraints(minWidth: 150),
                     child: GFButton(
                       onPressed: chooseTo,
                       text: _truncateCityName(city_to),
                       color: shakeButtons && city_to.isEmpty
                           ? Colors.red
                           : Colors.black,
-                      // icon: const Ico  n(Icons.location_on_rounded),
                       type: GFButtonType.outline2x,
                       size: GFSize.LARGE,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: GFButton(
-                      onPressed: rotaOlustur,
-                      text: "ROTA HESAPLA",
-                      textStyle: TextStyle(
-                        fontFamily: GoogleFonts.luckiestGuy().fontFamily,
-                        color: Colors.black,
-                      ),
-                      icon: const Icon(Icons.route),
-                      color: Colors.green,
                     ),
                   ),
                 ],
@@ -333,6 +302,26 @@ class _MyMapState extends State<MyMap> {
                   ),
                 ],
               ),
+              // const SizedBox(height: 60),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: GFButton(
+                        onPressed: rotaOlustur,
+                        text: "ROTA HESAPLA",
+                        textStyle: TextStyle(
+                          fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                          color: Colors.black,
+                        ),
+                        icon: const Icon(Icons.nordic_walking_outlined),
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -343,7 +332,7 @@ class _MyMapState extends State<MyMap> {
             width: 45,
             height: 45,
             child: FloatingActionButton(
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.deepPurpleAccent,
                 child: const Icon(
                   Icons.add,
                   color: Colors.black,
@@ -358,25 +347,22 @@ class _MyMapState extends State<MyMap> {
   }
 
   double calculateDistance(LatLng from, LatLng to) {
-    const double earthRadius = 6371.0; // Radius of the Earth in kilometers
+    const double earthRadius = 6371.0;
 
-    // Convert latitude and longitude from degrees to radians
     double fromLatRadians = _degreesToRadians(from.latitude);
     double fromLngRadians = _degreesToRadians(from.longitude);
     double toLatRadians = _degreesToRadians(to.latitude);
     double toLngRadians = _degreesToRadians(to.longitude);
 
-    // Calculate the differences between coordinates
     double latDiff = toLatRadians - fromLatRadians;
     double lngDiff = toLngRadians - fromLngRadians;
 
-    // Apply the Haversine formula
     double a = pow(sin(latDiff / 2), 2) +
         cos(fromLatRadians) * cos(toLatRadians) * pow(sin(lngDiff / 2), 2);
     double c = 2 * atan2(sqrt(a), sqrt(1 - a));
     double distance = earthRadius * c;
 
-    return distance; // Distance in kilometers
+    return distance;
   }
 
   double _degreesToRadians(double degrees) {
@@ -391,11 +377,11 @@ class _MyMapState extends State<MyMap> {
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
         position: position,
       );
-      // _destination = null;
+
       _info = null;
     });
 
-    _addPolyline(); // Add the polyline when setting the origin marker
+    _addPolyline();
   }
 
   void addDestinationMarker(LatLng position) {
@@ -406,22 +392,19 @@ class _MyMapState extends State<MyMap> {
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
         position: position,
       );
-      _info = null; // Reset info if needed, but not _destination
+      _info = null;
     });
 
-    _addPolyline(); // Add the polyline when setting the origin marker
+    _addPolyline();
   }
 
   void _addPolyline() {
-    // Check if both origin and destination markers are set
     if (_origin != null && _destination != null) {
-      // Define the polyline coordinates using origin and destination positions
       final List<LatLng> polylineCoordinates = [
         _origin!.position,
         _destination!.position,
       ];
 
-      // Create a Polyline object
       final Polyline polyline = Polyline(
         polylineId: PolylineId('polyline'),
         color: Colors.red,
@@ -429,7 +412,6 @@ class _MyMapState extends State<MyMap> {
         points: polylineCoordinates,
       );
 
-      // Add the polyline to the map
       setState(() {
         _polylines.add(polyline);
       });
@@ -503,7 +485,6 @@ class _MyMapState extends State<MyMap> {
           _origin = null;
         });
 
-        // Delay the restoration of the buttons
         Future.delayed(const Duration(milliseconds: 500), () {
           setState(() {
             shakeButtons = false;
@@ -529,13 +510,10 @@ class _MyMapState extends State<MyMap> {
         CameraUpdate.newLatLngZoom(originLatLong, 7),
       );
     } else {
-      // Show a message or handle the case when both cities are not selected
-
       setState(() {
         shakeButtons = true;
       });
 
-      // Delay the restoration of the buttons
       Future.delayed(const Duration(milliseconds: 500), () {
         setState(() {
           shakeButtons = false;
@@ -545,11 +523,11 @@ class _MyMapState extends State<MyMap> {
   }
 
   String _truncateCityName(String cityName) {
-    const maxLength = 9; // Define the maximum length before truncation
+    const maxLength = 9;
     if (cityName.length > maxLength) {
-      return '${cityName.substring(0, maxLength)}...'; // Truncate and add ellipsis
+      return '${cityName.substring(0, maxLength)}...';
     } else {
-      return cityName; // Return the original name if it's short
+      return cityName;
     }
   }
 
@@ -559,19 +537,19 @@ class _MyMapState extends State<MyMap> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
-            "Dikkat",
-            style: GoogleFonts.luckiestGuy(fontSize: 30),
+          title: Center(
+            child: Text(
+              "ROTA EKLE",
+              style: GoogleFonts.luckiestGuy(fontSize: 30),
+            ),
           ),
-          content: Text("Bu rotayı eklemek istiyor musunuz?",
-              style: GoogleFonts.ubuntuCondensed(fontSize: 20)),
+          content: Text(
+            "Bu rotayı eklemek istiyor musunuz?",
+            style: GoogleFonts.ubuntuCondensed(fontSize: 18),
+          ),
           actions: <Widget>[
             TextButton(
-              onPressed: () {
-                print('hayır dedin');
-
-                Navigator.of(context).pop();
-              },
+              onPressed: null,
               child: GFButton(
                 text: "Hayır",
                 textStyle: TextStyle(
@@ -580,15 +558,13 @@ class _MyMapState extends State<MyMap> {
                 ),
                 color: Colors.red,
                 onPressed: () {
-                  print('hayır dedin2');
-                  Navigator.of(context).pop(); // Dismiss dialog
+                  Navigator.of(context).pop();
                 },
               ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // Perform action for "Evet" button here
               },
               child: GFButton(
                 text: "Evet",
@@ -599,8 +575,7 @@ class _MyMapState extends State<MyMap> {
                 color: Colors.green,
                 onPressed: () {
                   storeRouteInFirestore();
-
-                  Navigator.of(context).pop(); // Dismiss dialog
+                  Navigator.of(context).pop();
                 },
               ),
             ),
@@ -613,25 +588,21 @@ class _MyMapState extends State<MyMap> {
   void storeRouteInFirestore() async {
     rotaOlustur();
 
-    // Access the latitude and longitude of the selected cities
     LatLng originLatLng = turkishCitiesCoordinates[city_from]!;
     LatLng destinationLatLng = turkishCitiesCoordinates[city_to]!;
 
-    // Convert LatLng objects to GeoPoint
     GeoPoint originGeoPoint =
         GeoPoint(originLatLng.latitude, originLatLng.longitude);
     GeoPoint destinationGeoPoint =
         GeoPoint(destinationLatLng.latitude, destinationLatLng.longitude);
 
-    // Get the user's email
     String? userEmail = await getUserEmail();
-    // If userEmail is null, handle the case accordingly
+
     if (userEmail == null) {
       print('User email is null');
       return;
     }
 
-    // Query Firestore to check if a document with the same origin and destination already exists
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
         .collection('routes')
@@ -639,14 +610,13 @@ class _MyMapState extends State<MyMap> {
         .where('destination', isEqualTo: destinationGeoPoint)
         .get();
 
-    // If a document with the same origin and destination already exists, notify the user
     if (snapshot.docs.isNotEmpty) {
       print('Route already exists in Firestore');
-      // You can show a snackbar, toast, or dialog to inform the user
+      _showToast('Rota zaten mevcut :(');
+
       return;
     }
 
-    // Store data in Firestore
     FirebaseFirestore.instance.collection('routes').add({
       'origin': originGeoPoint,
       'destination': destinationGeoPoint,
@@ -654,11 +624,9 @@ class _MyMapState extends State<MyMap> {
       'city_to': city_to,
       'fromWhom': userEmail,
     }).then((value) {
-      // Data stored successfully
-      print('Route added to Firestore');
+      _showToast('Rota eklendi!');
     }).catchError((error) {
-      // Error handling
-      print('Failed to add route: $error');
+      _showToast('Rota eklenemedi...');
     });
   }
 
@@ -671,5 +639,16 @@ class _MyMapState extends State<MyMap> {
     } else {
       return null;
     }
+  }
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.deepPurpleAccent.withOpacity(0.7),
+      textColor: Colors.black,
+      fontSize: 16.0,
+    );
   }
 }

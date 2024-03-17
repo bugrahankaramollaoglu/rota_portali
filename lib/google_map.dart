@@ -52,6 +52,8 @@ class _MyMapState extends State<MyMap> {
   Marker? _destination;
   Directions? _info;
 
+  Set<Polyline> _polylines = {};
+
   String? _mapStyle = '';
 
   @override
@@ -131,17 +133,9 @@ class _MyMapState extends State<MyMap> {
                           if (_origin != null) _origin!,
                           if (_destination != null) _destination!
                         },
-                        polylines: {
-                          if (_info != null && _info!.polylinePoints.isNotEmpty)
-                            Polyline(
-                              polylineId: const PolylineId('overview_polyline'),
-                              color: Colors.red,
-                              width: 5,
-                              points: _info!.polylinePoints
-                                  .map((e) => LatLng(e.latitude, e.longitude))
-                                  .toList(),
-                            ),
-                        },
+                        polylines: Set<Polyline>.of(
+                            _polylines), // Include polylines here
+
                         // onLongPress: _addMarker,
                       ),
                     ),
@@ -401,37 +395,6 @@ class _MyMapState extends State<MyMap> {
     return degrees * (pi / 180);
   }
 
-  void _addMarker(LatLng pos) async {
-    if (_origin == null || (_origin != null && _destination != null)) {
-      setState(() {
-        _origin = Marker(
-          markerId: const MarkerId('origin'),
-          infoWindow: const InfoWindow(title: 'Origin'),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-          position: pos,
-        );
-
-        _destination = null;
-
-        _info = null;
-      });
-    } else {
-      setState(() {
-        _destination = Marker(
-          markerId: const MarkerId('destination'),
-          infoWindow: const InfoWindow(title: 'Destination'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          position: pos,
-        );
-      });
-
-      final directions = await DirectionsRepository()
-          .getDirections(origin: _origin!.position, destination: pos);
-      setState(() => _info = directions);
-    }
-  }
-
   void addOriginMarker(LatLng position) {
     setState(() {
       _origin = Marker(
@@ -443,6 +406,8 @@ class _MyMapState extends State<MyMap> {
       // _destination = null;
       _info = null;
     });
+
+    _addPolyline(); // Add the polyline when setting the origin marker
   }
 
   void addDestinationMarker(LatLng position) {
@@ -455,6 +420,32 @@ class _MyMapState extends State<MyMap> {
       );
       _info = null; // Reset info if needed, but not _destination
     });
+
+    _addPolyline(); // Add the polyline when setting the origin marker
+  }
+
+  void _addPolyline() {
+    // Check if both origin and destination markers are set
+    if (_origin != null && _destination != null) {
+      // Define the polyline coordinates using origin and destination positions
+      final List<LatLng> polylineCoordinates = [
+        _origin!.position,
+        _destination!.position,
+      ];
+
+      // Create a Polyline object
+      final Polyline polyline = Polyline(
+        polylineId: PolylineId('polyline'),
+        color: Colors.red,
+        width: 3,
+        points: polylineCoordinates,
+      );
+
+      // Add the polyline to the map
+      setState(() {
+        _polylines.add(polyline);
+      });
+    }
   }
 
   void chooseFrom() {

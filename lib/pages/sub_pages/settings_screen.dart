@@ -94,7 +94,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
                         style: GoogleFonts.roboto(fontSize: 20),
                       ),
                     ),
-                    SizedBox(width: 30),
+                    const SizedBox(width: 30),
                     _themeSwitch(),
                   ],
                 ),
@@ -107,7 +107,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
                         style: GoogleFonts.roboto(fontSize: 20),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     _notificationSwitch(),
                   ],
                 ),
@@ -120,7 +120,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
                         style: GoogleFonts.roboto(fontSize: 20),
                       ),
                     ),
-                    SizedBox(width: 30),
+                    const SizedBox(width: 30),
                     GestureDetector(
                       onTap: () {
                         print("Button tapped");

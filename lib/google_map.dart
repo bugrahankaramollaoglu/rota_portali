@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:backpack_pal/cities.dart';
@@ -5,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/size/gf_size.dart';
@@ -13,7 +14,7 @@ import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:backpack_pal/directions_model.dart';
-import 'package:backpack_pal/directions_repository.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
 class MyMap extends StatefulWidget {
@@ -33,6 +34,21 @@ class _MyMapState extends State<MyMap> {
   String cityChosenFrom = '';
   String cityChosenTo = '';
 
+  double guvenilir = 0.0;
+  double rahatUlasim = 0.0;
+  double keyifli = 0.0;
+
+  final picker = ImagePicker();
+  XFile? _imageFile;
+
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _imageFile = pickedFile;
+    });
+  }
+
   double distanceBetween = 0.0;
 
   LatLng originLatLong = const LatLng(41.0086, 28.9802);
@@ -48,15 +64,20 @@ class _MyMapState extends State<MyMap> {
 
   late GoogleMapController _googleMapController;
   MapType _currentMapType = MapType.normal;
-  List<String> _mapTypeOptions = ['Normal', 'Terrain', 'Satellite', 'Hybrid'];
+  final List<String> _mapTypeOptions = [
+    'Normal',
+    'Terrain',
+    'Satellite',
+    'Hybrid'
+  ];
 
   Marker? _origin;
   Marker? _destination;
   Directions? _info;
 
-  Set<Polyline> _polylines = {};
+  final Set<Polyline> _polylines = {};
 
-  String? _mapStyle = '';
+  final String _mapStyle = '';
 
   @override
   void dispose() {
@@ -73,24 +94,24 @@ class _MyMapState extends State<MyMap> {
           title: const Text('   Google Maps'),
           actions: [
             DropdownButton(
-              icon: Icon(Icons.layers),
+              icon: const Icon(Icons.layers),
               value: _currentMapType.toString(),
               items: [
                 DropdownMenuItem(
                   value: MapType.normal.toString(),
-                  child: Text('Normal '),
+                  child: const Text('Normal '),
                 ),
                 DropdownMenuItem(
                   value: MapType.terrain.toString(),
-                  child: Text('Terrain '),
+                  child: const Text('Terrain '),
                 ),
                 DropdownMenuItem(
                   value: MapType.satellite.toString(),
-                  child: Text('Satellite '),
+                  child: const Text('Satellite '),
                 ),
                 DropdownMenuItem(
                   value: MapType.hybrid.toString(),
-                  child: Text('Hybrid '),
+                  child: const Text('Hybrid '),
                 ),
               ],
               onChanged: (String? newValue) {
@@ -102,7 +123,7 @@ class _MyMapState extends State<MyMap> {
                 });
               },
             ),
-            SizedBox(width: 40),
+            const SizedBox(width: 40),
           ],
         ),
         body: Padding(
@@ -295,53 +316,65 @@ class _MyMapState extends State<MyMap> {
                   Text(
                     '$distanceBetween km',
                     style: TextStyle(
-                      fontFamily: GoogleFonts.roboto().fontFamily,
-                      fontSize: 20,
+                      fontFamily: GoogleFonts.allerta().fontFamily,
+                      fontSize: 30,
                       color: Colors.black,
                     ),
                   ),
                 ],
               ),
-              // const SizedBox(height: 60),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: GFButton(
-                        onPressed: rotaOlustur,
-                        text: "ROTA HESAPLA",
-                        textStyle: TextStyle(
-                          fontFamily: GoogleFonts.luckiestGuy().fontFamily,
-                          color: Colors.black,
-                        ),
-                        icon: const Icon(Icons.nordic_walking_outlined),
-                        color: Colors.green,
+              const SizedBox(height: 35),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GFButton(
+                      onPressed: rotaOlustur,
+                      text: "ROTA HESAPLA",
+                      textStyle: TextStyle(
+                        fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                        color: Colors.black,
                       ),
+                      icon: const Icon(Icons.nordic_walking_outlined),
+                      color: Colors.green,
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GFButton(
+                      onPressed: show_add_dialog,
+                      text: "ROTA OLUŞTUR",
+                      textStyle: TextStyle(
+                        fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                        color: Colors.black,
+                      ),
+                      icon: const Icon(Icons.add),
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: SizedBox(
-            width: 45,
-            height: 45,
-            child: FloatingActionButton(
-                backgroundColor: Colors.deepPurpleAccent,
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  show_add_dialog();
-                }),
-          ),
-        ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+        // floatingActionButton: Padding(
+        //   padding: const EdgeInsets.all(15.0),
+        //   child: SizedBox(
+        //     width: 45,
+        //     height: 45,
+        //     child: FloatingActionButton(
+        //         backgroundColor: Colors.deepPurpleAccent,
+        //         child: const Icon(
+        //           Icons.add,
+        //           color: Colors.black,
+        //         ),
+        //         onPressed: () {
+        //           show_add_dialog();
+        //         }),
+        //   ),
+        // ),
       ),
     );
   }
@@ -406,7 +439,7 @@ class _MyMapState extends State<MyMap> {
       ];
 
       final Polyline polyline = Polyline(
-        polylineId: PolylineId('polyline'),
+        polylineId: const PolylineId('polyline'),
         color: Colors.red,
         width: 3,
         points: polylineCoordinates,
@@ -548,37 +581,145 @@ class _MyMapState extends State<MyMap> {
             style: GoogleFonts.ubuntuCondensed(fontSize: 18),
           ),
           actions: <Widget>[
-            TextButton(
-              onPressed: null,
-              child: GFButton(
-                text: "Hayır",
-                textStyle: TextStyle(
-                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
-                  color: Colors.black,
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'GÜVENİLİR',
+                      style: GoogleFonts.roboto(
+                        fontSize: 22,
+                      ),
+                    ),
+                  ],
                 ),
-                color: Colors.red,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: GFButton(
-                text: "Evet",
-                textStyle: TextStyle(
-                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
-                  color: Colors.black,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RatingBar.builder(
+                      initialRating: 0,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star_rounded,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onRatingUpdate: (_guvenilir) {
+                        print('güvenilir rate: ${guvenilir}');
+                        guvenilir = _guvenilir;
+                      },
+                    ),
+                  ],
                 ),
-                color: Colors.green,
-                onPressed: () {
-                  storeRouteInFirestore();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'KEYİFLİ',
+                      style: GoogleFonts.roboto(
+                        fontSize: 22,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RatingBar.builder(
+                      initialRating: 0,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star_rounded,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onRatingUpdate: (_keyifli) {
+                        print('keyifli rate: ${keyifli}');
+                        keyifli = _keyifli;
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'RAHAT ULAŞIM',
+                      style: GoogleFonts.roboto(
+                        fontSize: 22,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RatingBar.builder(
+                      initialRating: 0,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star_rounded,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onRatingUpdate: (_rahatUlasim) {
+                        print('rahatUlasim rate: ${rahatUlasim}');
+                        rahatUlasim = _rahatUlasim;
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: null,
+                      child: GFButton(
+                        text: "Hayır",
+                        textStyle: TextStyle(
+                          fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                          color: Colors.black,
+                        ),
+                        color: Colors.red,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: GFButton(
+                        text: "Evet",
+                        textStyle: TextStyle(
+                          fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                          color: Colors.black,
+                        ),
+                        color: Colors.green,
+                        onPressed: () {
+                          storeRouteInFirestore();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            )
           ],
         );
       },
@@ -623,6 +764,9 @@ class _MyMapState extends State<MyMap> {
       'city_from': city_from,
       'city_to': city_to,
       'fromWhom': userEmail,
+      'guvenilir': guvenilir,
+      'rahatUlasim': rahatUlasim,
+      'keyifli': keyifli,
     }).then((value) {
       _showToast('Rota eklendi!');
     }).catchError((error) {

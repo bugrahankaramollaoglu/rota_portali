@@ -4,7 +4,7 @@ import 'gonderi.dart';
 class GonderiListesi extends StatelessWidget {
   final List<Gonderi> gonderiler;
 
-  GonderiListesi({required this.gonderiler});
+  const GonderiListesi({super.key, required this.gonderiler});
 
   @override
   Widget build(BuildContext context) {
@@ -12,13 +12,13 @@ class GonderiListesi extends StatelessWidget {
       itemCount: gonderiler.length,
       itemBuilder: (context, index) {
         return Card(
-          margin: EdgeInsets.all(8.0),
+          margin: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               ListTile(
                 title: Text(
                   gonderiler[index].baslik,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18.0,
                   ),
@@ -26,14 +26,14 @@ class GonderiListesi extends StatelessWidget {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Divider(), // Başlık ile açıklama arasına çizgi ekle
+                    const Divider(), // Başlık ile açıklama arasına çizgi ekle
                     Text(
                       gonderiler[index].aciklama,
-                      style: TextStyle(fontSize: 16.0),
+                      style: const TextStyle(fontSize: 16.0),
                     ),
-                    SizedBox(height: 8.0), // Açıklama ile fotoğraf arasına boşluk ekle
+                    const SizedBox(height: 8.0), // Açıklama ile fotoğraf arasına boşluk ekle
                     if (gonderiler[index].foto != null)
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         height: MediaQuery.of(context).size.height / 4,
                         child: Image.file(
@@ -41,10 +41,10 @@ class GonderiListesi extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                    SizedBox(height: 8.0), // Fotoğraf ile kilometre arasına boşluk ekle
+                    const SizedBox(height: 8.0), // Fotoğraf ile kilometre arasına boşluk ekle
                     Text(
                       'Kilometre: ${gonderiler[index].kilometre}',
-                      style: TextStyle(fontSize: 16.0),
+                      style: const TextStyle(fontSize: 16.0),
                     ),
                   ],
                 ),

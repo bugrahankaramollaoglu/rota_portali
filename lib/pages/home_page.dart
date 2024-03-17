@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         color: Colors.white, // Icon renkleri
         buttonBackgroundColor: Colors.deepPurple[100], // Buton rengi
         height: 60, // Bottom bar yüksekliği
-        items: <Widget>[
+        items: const <Widget>[
           Icon(Icons.route_rounded, size: 30),
           Icon(Icons.home, size: 30),
           Icon(Icons.settings_rounded, size: 30),

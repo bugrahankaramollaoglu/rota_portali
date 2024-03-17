@@ -6,6 +6,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 
 class AnaSayfa extends StatefulWidget {
+  const AnaSayfa({super.key});
+
   @override
   _AnaSayfaState createState() => _AnaSayfaState();
 }
@@ -18,7 +20,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple[400],
-        title: Center(
+        title: const Center(
           child: Text('Anasayfa'),
         ),
       ),
@@ -26,19 +28,19 @@ class _AnaSayfaState extends State<AnaSayfa> {
         children: [
           Container(
             color: Colors.deepPurple[300],
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Column(
               children: [
                 Row(
                   children: [
                     Expanded(
                       child: Container(
-                        margin: EdgeInsets.all(10.0),
+                        margin: const EdgeInsets.all(10.0),
                         child: TextFormField(
                           decoration: InputDecoration(
                             hintText: 'Ara...',
-                            hintStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Icon(Icons.search, color: Colors.white),
+                            hintStyle: const TextStyle(color: Colors.white),
+                            prefixIcon: const Icon(Icons.search, color: Colors.white),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20.0),
                               borderSide: BorderSide.none,
@@ -48,20 +50,20 @@ class _AnaSayfaState extends State<AnaSayfa> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.filter_list, color: Colors.white),
+                      icon: const Icon(Icons.filter_list, color: Colors.white),
                       onPressed: () {
                         // Buraya filtreleme işlemleri için yapılacak işlemleri ekleyebilirsiniz
                       },
                     ),
                   ],
                 ),
-                Divider(color: Colors.white), // Çizgi ekle
+                const Divider(color: Colors.white), // Çizgi ekle
               ],
             ),
           ),
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -72,7 +74,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
                 ),
               ),
               child: gonderiler.isEmpty
-                  ? Center(
+                  ? const Center(
                 child: Text('Maalesef Görüntüleyebileceğiniz Rota Yok'),
               )
                   : GonderiListesi(gonderiler: gonderiler),
@@ -85,7 +87,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
         color: Colors.white, // Icon renkleri
         buttonBackgroundColor: Colors.deepPurple[100], // Buton rengi
         height: 60, // Bottom bar yüksekliği
-        items: <Widget>[
+        items: const <Widget>[
           Icon(Icons.add, size: 30),
           Icon(Icons.home, size: 30),
           Icon(Icons.account_circle, size: 30),

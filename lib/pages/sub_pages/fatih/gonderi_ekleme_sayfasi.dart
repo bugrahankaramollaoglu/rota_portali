@@ -6,7 +6,7 @@ import 'gonderi.dart';
 class GonderiEklemeSayfasi extends StatefulWidget {
   final Function(Gonderi) onGonderiEkle;
 
-  GonderiEklemeSayfasi({required this.onGonderiEkle});
+  const GonderiEklemeSayfasi({super.key, required this.onGonderiEkle});
 
   @override
   _GonderiEklemeSayfasiState createState() => _GonderiEklemeSayfasiState();
@@ -118,10 +118,10 @@ class _GonderiEklemeSayfasiState extends State<GonderiEklemeSayfasi> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gönderi Ekle'),
+        title: const Text('Gönderi Ekle'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -138,11 +138,11 @@ class _GonderiEklemeSayfasiState extends State<GonderiEklemeSayfasi> {
                   child: Text(il),
                 );
               }).toList(),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Başlangıç Şehri',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             DropdownButtonFormField<String>(
               value: varisSehri,
               onChanged: (value) {
@@ -156,13 +156,13 @@ class _GonderiEklemeSayfasiState extends State<GonderiEklemeSayfasi> {
                   child: Text(il),
                 );
               }).toList(),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Varış Şehri',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Kilometre',
               ),
               keyboardType: TextInputType.number,
@@ -172,9 +172,9 @@ class _GonderiEklemeSayfasiState extends State<GonderiEklemeSayfasi> {
                 });
               },
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Açıklama',
               ),
               onChanged: (value) {
@@ -183,15 +183,15 @@ class _GonderiEklemeSayfasiState extends State<GonderiEklemeSayfasi> {
                 });
               },
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _fotoSec,
-              child: Text('Fotoğraf Seç'),
+              child: const Text('Fotoğraf Seç'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             if (foto != null)
               Container(
-                padding: EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: Image.file(
                   foto!,
                   fit: BoxFit.cover,
@@ -199,7 +199,7 @@ class _GonderiEklemeSayfasiState extends State<GonderiEklemeSayfasi> {
                   height: MediaQuery.of(context).size.height * 0.25,
                 ),
               ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 if (baslangicSehri != null &&
@@ -217,7 +217,7 @@ class _GonderiEklemeSayfasiState extends State<GonderiEklemeSayfasi> {
                   Navigator.pop(context);
                 }
               },
-              child: Text('Rota Ekle'),
+              child: const Text('Rota Ekle'),
             ),
           ],
         ),

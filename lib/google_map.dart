@@ -1,12 +1,11 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:backpack_pal/cities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/size/gf_size.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,7 +15,7 @@ import 'package:backpack_pal/directions_repository.dart';
 import 'package:logger/logger.dart';
 
 class MyMap extends StatefulWidget {
-  const MyMap({Key? key}) : super(key: key);
+  const MyMap({super.key});
 
   @override
   State<MyMap> createState() => _MyMapState();
@@ -34,8 +33,8 @@ class _MyMapState extends State<MyMap> {
 
   double distanceBetween = 0.0;
 
-  LatLng originLatLong = LatLng(41.0086, 28.9802);
-  LatLng destinationLatLong = LatLng(41.0086, 28.9302);
+  LatLng originLatLong = const LatLng(41.0086, 28.9802);
+  LatLng destinationLatLong = const LatLng(41.0086, 28.9302);
 
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(
@@ -58,12 +57,14 @@ class _MyMapState extends State<MyMap> {
 
   @override
   Widget build(BuildContext context) {
+    // Future<String?> user_email = getUserEmail();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           centerTitle: false,
           title: const Text('   Google Maps'),
-          actions: [],
+          actions: const [],
         ),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
@@ -118,7 +119,7 @@ class _MyMapState extends State<MyMap> {
                             if (_info != null) {
                               _googleMapController.animateCamera(
                                 CameraUpdate.newLatLngBounds(
-                                    _info!.bounds!, 100.0),
+                                    _info!.bounds, 100.0),
                               );
                             } else {
                               _googleMapController.animateCamera(
@@ -142,7 +143,7 @@ class _MyMapState extends State<MyMap> {
                     child: Container(),
                   ),
                 ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -165,7 +166,7 @@ class _MyMapState extends State<MyMap> {
                         });
 
                         // Delay the restoration of the buttons
-                        Future.delayed(Duration(milliseconds: 500), () {
+                        Future.delayed(const Duration(milliseconds: 500), () {
                           setState(() {
                             shakeButtons = false;
                           });
@@ -184,7 +185,13 @@ class _MyMapState extends State<MyMap> {
                       ],
                     ),
                   ),
-                  SizedBox(width: 110),
+                  // const SizedBox(width: 110),
+                  Image.asset(
+                    'assets/route.png',
+                    width: 100,
+                    height: 50,
+                  ),
+                  const SizedBox(width: 5),
                   // if (_destination != null)
                   TextButton(
                     onPressed: () {
@@ -204,7 +211,7 @@ class _MyMapState extends State<MyMap> {
                         });
 
                         // Delay the restoration of the buttons
-                        Future.delayed(Duration(milliseconds: 500), () {
+                        Future.delayed(const Duration(milliseconds: 500), () {
                           setState(() {
                             shakeButtons = false;
                           });
@@ -280,12 +287,12 @@ class _MyMapState extends State<MyMap> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '${distanceBetween} km',
+                    '$distanceBetween km',
                     style: TextStyle(
                       fontFamily: GoogleFonts.roboto().fontFamily,
                       fontSize: 20,
@@ -293,19 +300,19 @@ class _MyMapState extends State<MyMap> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-        floatingActionButton: SizedBox(
-          width: 70,
-          height: 70,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: SizedBox(
+            width: 45,
+            height: 45,
             child: FloatingActionButton(
                 backgroundColor: Colors.blue,
-                child: Icon(
+                child: const Icon(
                   Icons.add,
                   color: Colors.black,
                 ),
@@ -468,7 +475,7 @@ class _MyMapState extends State<MyMap> {
         });
 
         // Delay the restoration of the buttons
-        Future.delayed(Duration(milliseconds: 500), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           setState(() {
             shakeButtons = false;
           });
@@ -495,24 +502,12 @@ class _MyMapState extends State<MyMap> {
     } else {
       // Show a message or handle the case when both cities are not selected
 
-      // if (_origin != null || _destination != null) {
-      //   LatLng orig = _origin!.position;
-      //   LatLng dest = _destination!.position;
-
-      //   setState(() {
-      //     cityChosenFrom = orig.toString();
-      //     cityChosenTo = dest.toString();
-      //     addOriginMarker(position);
-      //   });
-      // }
-
-      // Shake the buttons temporarily
       setState(() {
         shakeButtons = true;
       });
 
       // Delay the restoration of the buttons
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         setState(() {
           shakeButtons = false;
         });
@@ -599,6 +594,14 @@ class _MyMapState extends State<MyMap> {
     GeoPoint destinationGeoPoint =
         GeoPoint(destinationLatLng.latitude, destinationLatLng.longitude);
 
+    // Get the user's email
+    String? userEmail = await getUserEmail();
+    // If userEmail is null, handle the case accordingly
+    if (userEmail == null) {
+      print('User email is null');
+      return;
+    }
+
     // Query Firestore to check if a document with the same origin and destination already exists
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
@@ -620,6 +623,7 @@ class _MyMapState extends State<MyMap> {
       'destination': destinationGeoPoint,
       'city_from': city_from,
       'city_to': city_to,
+      'fromWhom': userEmail,
     }).then((value) {
       // Data stored successfully
       print('Route added to Firestore');
@@ -627,5 +631,16 @@ class _MyMapState extends State<MyMap> {
       // Error handling
       print('Failed to add route: $error');
     });
+  }
+
+  Future<String?> getUserEmail() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      return user.email;
+    } else {
+      return null;
+    }
   }
 }

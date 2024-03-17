@@ -2,9 +2,12 @@ import 'package:backpack_pal/pages/login_page.dart';
 import 'package:backpack_pal/shared_pref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/button/gf_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Settings_Screen extends StatefulWidget {
+  const Settings_Screen({super.key});
+
   // final Function(bool) onThemeChanged;
 
   @override
@@ -38,15 +41,45 @@ class _Settings_ScreenState extends State<Settings_Screen> {
     return Column(
       children: [
         Container(
-          alignment: Alignment.topLeft,
-          padding: EdgeInsets.fromLTRB(30, 50, 50, 5),
-          child: Text(
-            'Settings',
-            style: GoogleFonts.luckiestGuy(
-              fontSize: 35,
-            ),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.fromLTRB(30, 50, 50, 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceBetween, // Aligns children to the start and end of the row
+            children: [
+              Text(
+                'Settings',
+                style: GoogleFonts.luckiestGuy(
+                  fontSize: 28,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.person, // Choose the icon from Icons class
+                  size: 45, // Set the size of the icon
+                  color: Colors.black, // Optionally set the color of the icon
+                ),
+                onPressed: () {
+                  // Add your onPressed callback here
+                  print('Icon pressed');
+                },
+              ),
+            ],
           ),
         ),
+
+        /*  IconButton(
+                icon: Icon(
+                  Icons
+                      .person_outline_rounded, // Choose the icon from Icons class
+                  size: 45, // Set the size of the icon
+                  color: Colors.black, // Optionally set the color of the icon
+                ),
+                onPressed: () {
+                  // Add your onPressed callback here
+                  print('Icon pressed');
+                },
+              ), */
         _divider(),
         Row(
           children: [
@@ -54,7 +87,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
               padding: const EdgeInsets.all(40.0),
               child: Text(
                 'CHOOSE A THEME',
-                style: GoogleFonts.luckiestGuy(fontSize: 20),
+                style: GoogleFonts.roboto(fontSize: 20),
               ),
             ),
             const SizedBox(width: 30),
@@ -67,10 +100,10 @@ class _Settings_ScreenState extends State<Settings_Screen> {
               padding: const EdgeInsets.all(40.0),
               child: Text(
                 'SET NOTIFICATIONS',
-                style: GoogleFonts.luckiestGuy(fontSize: 20),
+                style: GoogleFonts.roboto(fontSize: 20),
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             _notificationSwitch(),
           ],
         ),
@@ -80,10 +113,10 @@ class _Settings_ScreenState extends State<Settings_Screen> {
               padding: const EdgeInsets.all(40.0),
               child: Text(
                 'RESET STATISTICS',
-                style: GoogleFonts.luckiestGuy(fontSize: 20),
+                style: GoogleFonts.roboto(fontSize: 20),
               ),
             ),
-            SizedBox(width: 30),
+            const SizedBox(width: 30),
             GestureDetector(
               onTap: () {
                 print("Button tapped");
@@ -96,6 +129,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
             ),
           ],
         ),
+        const SizedBox(height: 280),
         _logoutButton(),
       ],
     );
@@ -103,7 +137,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
 
   Widget _logoutButton() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 230, 18, 0),
+      padding: const EdgeInsets.fromLTRB(18, 25, 18, 0),
       child: ElevatedButton(
         onPressed: showLogoutConfirmationDialog,
         style: ElevatedButton.styleFrom(
@@ -127,6 +161,63 @@ class _Settings_ScreenState extends State<Settings_Screen> {
     );
   }
 
+  void show_add_dialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Dikkat",
+            style: GoogleFonts.luckiestGuy(fontSize: 30),
+          ),
+          content: Text("Bu rotayı eklemek istiyor musunuz?",
+              style: GoogleFonts.ubuntuCondensed(fontSize: 20)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                print('hayır dedin');
+
+                Navigator.of(context).pop();
+              },
+              child: GFButton(
+                text: "Hayır",
+                textStyle: TextStyle(
+                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                  color: Colors.black,
+                ),
+                color: Colors.red,
+                onPressed: () {
+                  print('hayır dedin2');
+                  Navigator.of(context).pop(); // Dismiss dialog
+                },
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Perform action for "Evet" button here
+              },
+              child: GFButton(
+                text: "Evet",
+                textStyle: TextStyle(
+                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                  color: Colors.black,
+                ),
+                color: Colors.green,
+                onPressed: () {
+                  // storeRouteInFirestore();
+
+                  Navigator.of(context).pop(); // Dismiss dialog
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void showLogoutConfirmationDialog() {
     showDialog(
       context: context,
@@ -136,21 +227,42 @@ class _Settings_ScreenState extends State<Settings_Screen> {
             "WARNING",
             style: GoogleFonts.luckiestGuy(fontSize: 30),
           ),
-          content: Text("Are you sure you want to log out?",
+          content: Text("Çıkış yapmak istediğinizden emin misiniz?",
               style: GoogleFonts.ubuntuCondensed(fontSize: 20)),
           actions: <Widget>[
             TextButton(
-              child: Text("Cancel"),
               onPressed: () {
                 Navigator.of(context).pop();
+                // Perform action for "Evet" button here
               },
+              child: GFButton(
+                text: "Hayır",
+                textStyle: TextStyle(
+                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                  color: Colors.black,
+                ),
+                color: Colors.red,
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss dialog
+                },
+              ),
             ),
             TextButton(
-              child: Text("Log Out"),
               onPressed: () {
                 Navigator.of(context).pop();
-                logout();
               },
+              child: GFButton(
+                text: "Evet",
+                textStyle: TextStyle(
+                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                  color: Colors.black,
+                ),
+                color: Colors.green,
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss dialog
+                  logout();
+                },
+              ),
             ),
           ],
         );
@@ -164,7 +276,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
       context,
       MaterialPageRoute(
           builder: (context) =>
-              LoginPage()), // Replace LoginPage with your actual login page
+              const LoginPage()), // Replace LoginPage with your actual login page
     );
   }
 
@@ -203,10 +315,10 @@ class _Settings_ScreenState extends State<Settings_Screen> {
       );
 
   Widget _divider() {
-    return Container(
-      width: 300,
-      child: const Divider(
-        thickness: 2,
+    return const SizedBox(
+      width: 250,
+      child: Divider(
+        thickness: 1,
         color: Colors.black,
       ),
     );

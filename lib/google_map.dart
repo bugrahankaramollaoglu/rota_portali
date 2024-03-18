@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:backpack_pal/cities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,7 +24,7 @@ class MyMap extends StatefulWidget {
 
 class _MyMapState extends State<MyMap> {
   Logger logger = Logger();
-  TextEditingController _aciklamaController = TextEditingController();
+  final TextEditingController _aciklamaController = TextEditingController();
   bool shakeButtons = false;
 
   String city_from = '';
@@ -329,7 +328,7 @@ class _MyMapState extends State<MyMap> {
                 Column(
                   children: [
                     const Text(
-                      "Yolculuk Önerileriniz\n",
+                      "Rota yorumunuz\n",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -614,14 +613,14 @@ class _MyMapState extends State<MyMap> {
                         Icons.star_rounded,
                         color: Colors.deepPurpleAccent,
                       ),
-                      onRatingUpdate: (_guvenilir) {
-                        print('güvenilir rate: ${guvenilir}');
-                        guvenilir = _guvenilir;
+                      onRatingUpdate: (guvenilir) {
+                        print('güvenilir rate: $guvenilir');
+                        guvenilir = guvenilir;
                       },
                     ),
                   ],
                 ),
-                SizedBox(height: 25),
+                const SizedBox(height: 25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -647,14 +646,14 @@ class _MyMapState extends State<MyMap> {
                         Icons.star_rounded,
                         color: Colors.deepPurpleAccent,
                       ),
-                      onRatingUpdate: (_keyifli) {
-                        print('keyifli rate: ${keyifli}');
-                        keyifli = _keyifli;
+                      onRatingUpdate: (keyifli) {
+                        print('keyifli rate: $keyifli');
+                        keyifli = keyifli;
                       },
                     ),
                   ],
                 ),
-                SizedBox(height: 25),
+                const SizedBox(height: 25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -680,14 +679,14 @@ class _MyMapState extends State<MyMap> {
                         Icons.star_rounded,
                         color: Colors.deepPurpleAccent,
                       ),
-                      onRatingUpdate: (_rahatUlasim) {
-                        print('rahatUlasim rate: ${rahatUlasim}');
-                        rahatUlasim = _rahatUlasim;
+                      onRatingUpdate: (rahatUlasim) {
+                        print('rahatUlasim rate: $rahatUlasim');
+                        rahatUlasim = rahatUlasim;
                       },
                     ),
                   ],
                 ),
-                SizedBox(height: 25),
+                const SizedBox(height: 25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

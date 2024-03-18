@@ -3,7 +3,6 @@ import 'package:backpack_pal/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
@@ -195,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
           elevation: 4,
         ),
         child: const Text(
-          'Login',
+          'Giriş',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -211,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
       child: TextButton(
         onPressed: createUserWithEmailAndPassword,
         child: const Text(
-          'No account yet?\nRegister',
+          'Hesabınız yok mu?\nKaydolun',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15,
@@ -244,9 +243,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _appName() {
     return Container(
-      child: Text(
-        'Rota\n    Portalı.',
-        style: GoogleFonts.arvo(fontSize: 30),
+      child: const Text(
+        'Rota Portalı.',
+        style: TextStyle(
+          fontSize: 40,
+          fontFamily: 'Madimi',
+        ),
       ),
     );
   }
@@ -277,8 +279,8 @@ class _LoginPageState extends State<LoginPage> {
               _appImage(),
               _appName(),
               const SizedBox(height: 20),
-              _entryFieldEmail('email', _controllerEmail),
-              _entryFieldPassword('password', _controllerPassword),
+              _entryFieldEmail('e-posta', _controllerEmail),
+              _entryFieldPassword('şifre', _controllerPassword),
               _submitButton(),
               _loginOrRegisterButton(),
               _divider(),

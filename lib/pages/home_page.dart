@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   static final List<Widget> _widgetOptions = <Widget>[
     const Stats_Screen(),
     const Home_Screen(),
-    Settings_Screen(),
+    const Settings_Screen(),
   ];
 
   Future<void> signOut() async {

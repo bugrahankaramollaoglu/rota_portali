@@ -1,13 +1,11 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RoutesListView extends StatefulWidget {
-  const RoutesListView({Key? key});
+  const RoutesListView({super.key});
 
   @override
   State<RoutesListView> createState() => _RoutesListViewState();
@@ -73,8 +71,8 @@ class _RoutesListViewState extends State<RoutesListView> {
                   final guvenilir = document['guvenilir'] ?? 0;
                   final keyifli = document['keyifli'] ?? 0.0;
                   final rahatUlasim = document['rahatUlasim'] ?? 0.0;
-                  final origin = document['origin'] ?? GeoPoint(0, 0);
-                  final destination = document['destination'] ?? GeoPoint(0, 0);
+                  final origin = document['origin'] ?? const GeoPoint(0, 0);
+                  final destination = document['destination'] ?? const GeoPoint(0, 0);
                   final distance =
                       document.exists && document['distance'] != null
                           ? document['distance']
@@ -170,7 +168,7 @@ class _RoutesListViewState extends State<RoutesListView> {
                               padding: const EdgeInsets.all(8.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20.0),
-                                child: Container(
+                                child: SizedBox(
                                   width: 300,
                                   height: 150,
                                   child: GoogleMap(
@@ -216,7 +214,7 @@ class _RoutesListViewState extends State<RoutesListView> {
                                       textAlign: TextAlign.justify,
                                       text: TextSpan(
                                         text: explanation,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize:
                                               15.0, // Adjust font size as needed
                                               fontStyle: FontStyle.italic,
@@ -269,9 +267,9 @@ class _RoutesListViewState extends State<RoutesListView> {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Expanded(
             child: content is double
                 ? _buildStarRating(content)
@@ -293,21 +291,21 @@ Widget _buildStarRating(double rating) {
   // Add full stars
   for (int i = 0; i < numberOfFullStars; i++) {
     stars.add(
-      Icon(Icons.star, color: Colors.amber, size: 24),
+      const Icon(Icons.star, color: Colors.amber, size: 24),
     );
   }
 
   // Add half stars
   if (numberOfHalfStars == 1) {
     stars.add(
-      Icon(Icons.star_half, color: Colors.amber, size: 24),
+      const Icon(Icons.star_half, color: Colors.amber, size: 24),
     );
   }
 
   // Add empty stars
   for (int i = 0; i < numberOfEmptyStars; i++) {
     stars.add(
-      Icon(Icons.star_border, color: Colors.amber, size: 24),
+      const Icon(Icons.star_border, color: Colors.amber, size: 24),
     );
   }
 

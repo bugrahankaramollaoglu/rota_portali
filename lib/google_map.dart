@@ -613,9 +613,9 @@ class _MyMapState extends State<MyMap> {
                         Icons.star_rounded,
                         color: Colors.deepPurpleAccent,
                       ),
-                      onRatingUpdate: (guvenilir) {
+                      onRatingUpdate: (_guvenilir) {
                         print('güvenilir rate: $guvenilir');
-                        guvenilir = guvenilir;
+                        guvenilir = _guvenilir;
                       },
                     ),
                   ],
@@ -646,9 +646,9 @@ class _MyMapState extends State<MyMap> {
                         Icons.star_rounded,
                         color: Colors.deepPurpleAccent,
                       ),
-                      onRatingUpdate: (keyifli) {
+                      onRatingUpdate: (_keyifli) {
                         print('keyifli rate: $keyifli');
-                        keyifli = keyifli;
+                        keyifli = _keyifli;
                       },
                     ),
                   ],
@@ -679,9 +679,9 @@ class _MyMapState extends State<MyMap> {
                         Icons.star_rounded,
                         color: Colors.deepPurpleAccent,
                       ),
-                      onRatingUpdate: (rahatUlasim) {
+                      onRatingUpdate: (_rahatUlasim) {
                         print('rahatUlasim rate: $rahatUlasim');
-                        rahatUlasim = rahatUlasim;
+                        rahatUlasim = _rahatUlasim;
                       },
                     ),
                   ],
@@ -744,14 +744,14 @@ class _MyMapState extends State<MyMap> {
 
     String? userEmail = await getUserEmail();
 
-    if (userEmail == null ||
-        guvenilir == 0 ||
-        rahatUlasim == 0 ||
-        keyifli == 0 ||
-        distanceBetween == 0.0) {
-      _showToast('Bilgileri Doldurunuz.');
-      return;
-    }
+    // if (userEmail == null ||
+    //     guvenilir == 0 ||
+    //     rahatUlasim == 0 ||
+    //     keyifli == 0 ||
+    //     distanceBetween == 0.0) {
+    //   _showToast('Bilgileri Doldurunuz.');
+    //   return;
+    // }
 
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance

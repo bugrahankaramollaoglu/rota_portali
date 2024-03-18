@@ -1,4 +1,5 @@
 import 'package:backpack_pal/pages/login_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/button/gf_button.dart';
@@ -105,7 +106,6 @@ class _Settings_ScreenState extends State<Settings_Screen> {
               onTap: () {
                 // Add sign out logic here
                 showLogoutAlert();
-                print('Cıksıss');
               },
             ),
             const Expanded(child: SizedBox()),
@@ -217,6 +217,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
                   String? userEmail = await getUserEmail();
                   if (userEmail != null) {
                     removeRoutes(userEmail);
+                    Navigator.of(context).pop();
                   }
                 },
               ),
@@ -248,5 +249,18 @@ class _Settings_ScreenState extends State<Settings_Screen> {
     );
   }
 
-  void removeRoutes(String userEmail) {}
+  Future<void> removeRoutes(String email) async {
+    // Get a reference to the Firestore collection
+    CollectionReference routes =
+        FirebaseFirestore.instance.collection('routes');
+
+    // Query documents where "fromWhom" field matches the provided email
+    QuerySnapshot querySnapshot =
+        await routes.where('fromWhom', isEqualTo: email).get();
+
+    // Iterate through the documents and delete them
+    for (var doc in querySnapshot.docs) {
+      await doc.reference.delete();
+    }
+  }
 }

@@ -2,6 +2,12 @@
 
 ![asd](https://github.com/bugrahankaramollaoglu/rota_portali/blob/main/graphics/feature.png)
 
+## packages
+
+* firebase auth for user authentications
+* firestore for database storings
+* google maps api for geolocations
+
 ## requirements
 
 * dart sdk 3.0.7 ile çalışıyor

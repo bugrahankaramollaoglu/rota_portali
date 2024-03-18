@@ -12,7 +12,6 @@ import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rota_portali/directions_model.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
 class MyMap extends StatefulWidget {
@@ -35,17 +34,6 @@ class _MyMapState extends State<MyMap> {
   double guvenilir = 0.0;
   double rahatUlasim = 0.0;
   double keyifli = 0.0;
-
-  final picker = ImagePicker();
-  XFile? _imageFile;
-
-  Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      _imageFile = pickedFile;
-    });
-  }
 
   double distanceBetween = 0.0;
 
@@ -328,17 +316,22 @@ class _MyMapState extends State<MyMap> {
                 Column(
                   children: [
                     const Text(
+                      // "Rota yorumunuz\n(Önerilen mekanlar, yol tavsiyeleri, görülmesi gerekenler...)",
                       "Rota yorumunuz\n",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontSize: 17,
                       ),
                     ),
                     TextFormField(
                       controller:
                           _aciklamaController, // Burada kontrolcüyü atayın
-                      decoration: const InputDecoration(
-                        labelText: 'Buraya yazın',
-                        border: OutlineInputBorder(),
+                     decoration: const InputDecoration(
+                        labelText: 'Yazınız',
+                        border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0),
+                        ),
                       ),
                       maxLines: 3,
                     ),

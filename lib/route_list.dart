@@ -12,13 +12,10 @@ class RoutesListView extends StatefulWidget {
 }
 
 class _RoutesListViewState extends State<RoutesListView> {
-  int? _expandedIndex; // Index of the currently expanded item
-  final List<Set<Marker>> _markersList =
-      []; // List to hold markers for each list item
-  final List<Set<Polyline>> _polylinesList =
-      []; // List to hold polylines for each list item
-  final TextEditingController _searchController =
-      TextEditingController(); // Controller for search field
+  int? _expandedIndex;
+  final List<Set<Marker>> _markersList = [];
+  final List<Set<Polyline>> _polylinesList = [];
+  final TextEditingController _searchController = TextEditingController();
 
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(
@@ -30,8 +27,7 @@ class _RoutesListViewState extends State<RoutesListView> {
 
   @override
   void dispose() {
-    _searchController
-        .dispose(); // Dispose the controller when the widget is disposed
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -39,44 +35,37 @@ class _RoutesListViewState extends State<RoutesListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Anasayfa')), // Center-align the title text
-        backgroundColor: Colors.deepPurpleAccent, // Set app bar color to purple
+        title: Text('Anasayfa'),
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       body: Column(
         children: [
           Container(
-            color: Colors
-                .deepPurpleAccent, // App bar rengiyle uyumlu hale getirildi
+            color: Colors.deepPurpleAccent,
             padding: const EdgeInsets.all(8.0),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
               child: TextField(
-                controller: _searchController, // Assign controller to TextField
+                controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Ara...',
-                  prefixIcon: const Icon(Icons.search,
-                      color: Colors.white), // Icon rengi beyaz olarak ayarlandı
+                  prefixIcon: const Icon(Icons.search, color: Colors.white),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    borderSide: const BorderSide(
-                        color: Colors
-                            .white), // Dış çizgi rengi beyaz olarak ayarlandı
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    // Arama kutusu devre dışı olduğunda da dış çizgi beyaz olacak
                     borderRadius: BorderRadius.circular(20.0),
-                    borderSide: const BorderSide(color: Colors.white, width: 2.0),
+                    borderSide:
+                        const BorderSide(color: Colors.white, width: 2.0),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    borderSide: const BorderSide(
-                        color: Colors
-                            .purple), // Focused dış çizgi rengi beyaz olarak ayarlandı
+                    borderSide: const BorderSide(color: Colors.purple),
                   ),
                 ),
                 onChanged: (value) {
-                  // Implement search functionality here
-                  setState(() {}); // Update the UI when search text changes
+                  setState(() {});
                 },
               ),
             ),
@@ -87,10 +76,7 @@ class _RoutesListViewState extends State<RoutesListView> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.deepPurpleAccent,
-                    Colors.white
-                  ], // Gradient from purple to white
+                  colors: [Colors.deepPurpleAccent, Colors.white],
                 ),
               ),
               child: FutureBuilder<QuerySnapshot>(
@@ -108,13 +94,11 @@ class _RoutesListViewState extends State<RoutesListView> {
                     final List<DocumentSnapshot> documents =
                         snapshot.data!.docs;
 
-                    // Apply filtering based on search text
                     final filteredDocuments = documents.where((document) {
                       final cityFrom = document['city_from'] ?? '';
                       final cityTo = document['city_to'] ?? '';
                       final searchText = _searchController.text.toLowerCase();
 
-                      // Filter documents where either cityFrom or cityTo matches search text
                       return cityFrom.toLowerCase().contains(searchText) ||
                           cityTo.toLowerCase().contains(searchText);
                     }).toList();
@@ -130,19 +114,17 @@ class _RoutesListViewState extends State<RoutesListView> {
                         final guvenilir = document['guvenilir'] ?? 0;
                         final keyifli = document['keyifli'] ?? 0.0;
                         final rahatUlasim = document['rahatUlasim'] ?? 0.0;
-                        final origin = document['origin'] ?? const GeoPoint(0, 0);
+                        final origin =
+                            document['origin'] ?? const GeoPoint(0, 0);
                         final destination =
                             document['destination'] ?? const GeoPoint(0, 0);
                         final distance = document['distance'] ?? 0;
                         final explanation = document['explanation'] ?? '';
 
-                        // Check if this item is expanded
                         bool isExpanded = _expandedIndex == index;
 
-                        // Create a new set of markers for this list item
                         Set<Marker> markers = {};
 
-                        // Add marker for cityFrom and cityTo if they are not empty
                         if (cityFrom.isNotEmpty) {
                           markers.add(
                             Marker(
@@ -164,13 +146,10 @@ class _RoutesListViewState extends State<RoutesListView> {
                           );
                         }
 
-                        // Add the set of markers to the list of marker sets
                         _markersList.add(markers);
 
-                        // Create a new set of polylines for this list item
                         Set<Polyline> polylines = {};
 
-                        // Add a polyline with wavy effect between origin and destination
                         polylines.add(
                           Polyline(
                             polylineId: PolylineId('polyline$index'),
@@ -184,19 +163,15 @@ class _RoutesListViewState extends State<RoutesListView> {
                           ),
                         );
 
-                        // Add the set of polylines to the list of polyline sets
                         _polylinesList.add(polylines);
 
-                        // You can use these fields to build your UI
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
                           child: Card(
                             elevation: 5,
                             child: GestureDetector(
                               onTap: () {
-                                // Handle item click here
                                 setState(() {
-                                  // Update the expanded index to this item's index
                                   _expandedIndex = isExpanded ? null : index;
                                 });
                                 print('Item clicked: $cityFrom - $cityTo');
@@ -240,7 +215,6 @@ class _RoutesListViewState extends State<RoutesListView> {
                                       ),
                                     ),
                                   ),
-                                  // Additional widgets revealed when expanded
                                   _buildDescriptionWidget(
                                       'Güvenilirlik: ', guvenilir),
                                   _buildDescriptionWidget('Keyifli: ', keyifli),
@@ -287,8 +261,7 @@ class _RoutesListViewState extends State<RoutesListView> {
     List<LatLng> points = [];
     final double totalDistance =
         sqrt(pow(endLat - startLat, 2) + pow(endLng - startLng, 2));
-    final double segmentLength = totalDistance /
-        50; // Divide total distance into 50 segments for more waves
+    final double segmentLength = totalDistance / 50;
 
     for (double t = 0; t <= 1; t += 0.01) {
       final double offsetX = sin(t * pi * 10) * segmentLength * 0.1;
@@ -328,21 +301,18 @@ class _RoutesListViewState extends State<RoutesListView> {
 
     List<Widget> stars = [];
 
-    // Add full stars
     for (int i = 0; i < numberOfFullStars; i++) {
       stars.add(
         const Icon(Icons.star, color: Colors.amber, size: 24),
       );
     }
 
-    // Add half stars
     if (numberOfHalfStars == 1) {
       stars.add(
         const Icon(Icons.star_half, color: Colors.amber, size: 24),
       );
     }
 
-    // Add empty stars
     for (int i = 0; i < numberOfEmptyStars; i++) {
       stars.add(
         const Icon(Icons.star_border, color: Colors.amber, size: 24),

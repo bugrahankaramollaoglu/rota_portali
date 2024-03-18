@@ -20,7 +20,6 @@ class _Settings_ScreenState extends State<Settings_Screen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ayarlar'),
-        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),

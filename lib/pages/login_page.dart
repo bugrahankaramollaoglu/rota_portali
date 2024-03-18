@@ -51,6 +51,13 @@ class _LoginPageState extends State<LoginPage> {
         email: _controllerEmail.text.trim(),
         password: _controllerPassword.text,
       );
+
+      // If login is successful, navigate to HomePage and remove the login page from the stack
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+        (route) => false,
+      );
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
@@ -88,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
     return Center(
       child: TextButton(
         onPressed: () async {
-          _showToast('aksdalsd');
+          _showToast('google');
           final User? user = await _signInWithGoogle();
           if (user != null) {
             _showToast('Kayıt başarılı!');
@@ -238,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _appName() {
     return Container(
       child: Text(
-        'rota\n    portalı.',
+        'Rota\n    Portalı.',
         style: GoogleFonts.arvo(fontSize: 30),
       ),
     );

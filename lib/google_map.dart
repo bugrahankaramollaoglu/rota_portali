@@ -1,11 +1,10 @@
+import 'dart:io';
 import 'dart:math';
-
 import 'package:backpack_pal/cities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/components/button/gf_button.dart';
@@ -26,7 +25,7 @@ class MyMap extends StatefulWidget {
 
 class _MyMapState extends State<MyMap> {
   Logger logger = Logger();
-
+  TextEditingController _aciklamaController = TextEditingController();
   bool shakeButtons = false;
 
   String city_from = '';
@@ -56,10 +55,10 @@ class _MyMapState extends State<MyMap> {
 
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(
-      41.0086,
-      28.9802,
+      39.2933,
+      35.2374,
     ),
-    zoom: 8,
+    zoom: 4.5,
   );
 
   late GoogleMapController _googleMapController;
@@ -170,7 +169,9 @@ class _MyMapState extends State<MyMap> {
                               if (_info != null) {
                                 _googleMapController.animateCamera(
                                   CameraUpdate.newLatLngBounds(
-                                      _info!.bounds, 100.0),
+                                    _info!.bounds,
+                                    100.0,
+                                  ),
                                 );
                               } else {
                                 _googleMapController.animateCamera(
@@ -325,34 +326,54 @@ class _MyMapState extends State<MyMap> {
                   ],
                 ),
                 const SizedBox(height: 35),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GFButton(
-                        onPressed: rotaOlustur,
-                        text: "ROTA HESAPLA",
-                        textStyle: TextStyle(
-                          fontFamily: GoogleFonts.luckiestGuy().fontFamily,
-                          color: Colors.black,
-                        ),
-                        icon: const Icon(Icons.nordic_walking_outlined),
-                        color: Colors.green,
+                    const Text(
+                      "Yolculuk Önerileriniz\n",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GFButton(
-                        onPressed: show_add_dialog,
-                        text: "ROTA OLUŞTUR",
-                        textStyle: TextStyle(
-                          fontFamily: GoogleFonts.luckiestGuy().fontFamily,
-                          color: Colors.black,
-                        ),
-                        icon: const Icon(Icons.add),
-                        color: Colors.blue,
+                    TextFormField(
+                      controller:
+                          _aciklamaController, // Burada kontrolcüyü atayın
+                      decoration: const InputDecoration(
+                        labelText: 'Buraya yazın',
+                        border: OutlineInputBorder(),
                       ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GFButton(
+                            onPressed: rotaOlustur,
+                            text: "ROTA HESAPLA",
+                            textStyle: TextStyle(
+                              fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                              color: Colors.black,
+                            ),
+                            icon: const Icon(Icons.nordic_walking_outlined),
+                            color: Colors.green,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GFButton(
+                            onPressed: show_add_dialog,
+                            text: "ROTA OLUŞTUR",
+                            textStyle: TextStyle(
+                              fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                              color: Colors.black,
+                            ),
+                            icon: const Icon(Icons.add),
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -360,23 +381,6 @@ class _MyMapState extends State<MyMap> {
             ),
           ),
         ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-        // floatingActionButton: Padding(
-        //   padding: const EdgeInsets.all(15.0),
-        //   child: SizedBox(
-        //     width: 45,
-        //     height: 45,
-        //     child: FloatingActionButton(
-        //         backgroundColor: Colors.deepPurpleAccent,
-        //         child: const Icon(
-        //           Icons.add,
-        //           color: Colors.black,
-        //         ),
-        //         onPressed: () {
-        //           show_add_dialog();
-        //         }),
-        //   ),
-        // ),
       ),
     );
   }
@@ -589,7 +593,7 @@ class _MyMapState extends State<MyMap> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Güvenilir',
+                      'Güvenlik',
                       style: GoogleFonts.roboto(
                         fontSize: 22,
                       ),
@@ -683,13 +687,6 @@ class _MyMapState extends State<MyMap> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // TextFormField(),
-                  ],
-                ),
                 SizedBox(height: 25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -737,7 +734,7 @@ class _MyMapState extends State<MyMap> {
 
   void storeRouteInFirestore() async {
     rotaOlustur();
-
+    String aciklama = _aciklamaController.text;
     LatLng originLatLng = turkishCitiesCoordinates[city_from]!;
     LatLng destinationLatLng = turkishCitiesCoordinates[city_to]!;
 
@@ -767,7 +764,6 @@ class _MyMapState extends State<MyMap> {
     if (snapshot.docs.isNotEmpty) {
       print('Route already exists in Firestore');
       _showToast('Rota zaten mevcut :(');
-
       return;
     }
 
@@ -781,6 +777,7 @@ class _MyMapState extends State<MyMap> {
       'rahatUlasim': rahatUlasim,
       'keyifli': keyifli,
       'distance': distanceBetween,
+      'aciklama': aciklama, // Açıklama verisini Firestore'a ekleyin
     }).then((value) {
       _showToast('Rota eklendi!');
     }).catchError((error) {

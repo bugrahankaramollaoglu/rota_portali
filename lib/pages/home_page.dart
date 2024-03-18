@@ -28,7 +28,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex =
+      1; // Başlangıçta ana sayfa butonunu göstermek için _selectedIndex 1 olarak ayarlandı
 
   static final List<Widget> _widgetOptions = <Widget>[
     const Stats_Screen(),
@@ -53,7 +54,8 @@ class _HomePageState extends State<HomePage> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _selectedIndex =
+          index; // Seçilen elemanın endeksini _selectedIndex değişkenine atar
     });
   }
 
@@ -71,25 +73,9 @@ class _HomePageState extends State<HomePage> {
           Icon(Icons.home, size: 30),
           Icon(Icons.settings_rounded, size: 30),
         ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              setState(() {
-                _selectedIndex = 0;
-              });
-            case 1:
-              setState(() {
-                _selectedIndex = 1;
-              });
-            case 2:
-              setState(() {
-                _selectedIndex = 2;
-              });
-
-              break;
-            // Diğer butonlara göre işlemler buraya eklenebilir
-          }
-        },
+        index: 1, // Başlangıçta seçili olan elemanın endeksini belirtir
+        onTap:
+            _onItemTapped, // onTap olayını _onItemTapped fonksiyonuyla bağlar
       ),
     );
   }

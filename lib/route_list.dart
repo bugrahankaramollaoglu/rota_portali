@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,12 +15,10 @@ class RoutesListView extends StatefulWidget {
 
 class _RoutesListViewState extends State<RoutesListView> {
   int? _expandedIndex; // Index of the currently expanded item
-  List<Set<Marker>> _markersList =
+  final List<Set<Marker>> _markersList =
       []; // List to hold markers for each list item
-
-  List<Set<Polyline>> _polylinesList =
+  final List<Set<Polyline>> _polylinesList =
       []; // List to hold polylines for each list item
-
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(
       39.2933,
@@ -32,7 +31,8 @@ class _RoutesListViewState extends State<RoutesListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Anasayfa')), // Center-align the title text
+        title: const Center(
+            child: Text('Anasayfa')), // Center-align the title text
         backgroundColor: Colors.deepPurpleAccent, // Set app bar color to purple
       ),
       body: Container(
@@ -61,9 +61,7 @@ class _RoutesListViewState extends State<RoutesListView> {
               final List<DocumentSnapshot> documents = snapshot.data!.docs;
 
               return ListView.builder(
-                // Use ListView.builder instead of ListView.separated
-                itemCount:
-                    documents.length, // Set the item count to documents.length
+                itemCount: documents.length,
                 itemBuilder: (context, index) {
                   final DocumentSnapshot document = documents[index];
                   final cityFrom =
@@ -166,9 +164,7 @@ class _RoutesListViewState extends State<RoutesListView> {
                             ),
                           ),
                           subtitle: Text('Yükleyen: $fromWhom'),
-                          // Initially expanded if this item is the expanded one
                           initiallyExpanded: isExpanded,
-                          // Add more fields as needed
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -190,20 +186,48 @@ class _RoutesListViewState extends State<RoutesListView> {
                             ),
                             // Additional widgets revealed when expanded
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Güvenilir: $guvenilir'),
+                              padding: const EdgeInsets.fromLTRB(15, 8, 0, 0),
+                              child: _buildDescriptionWidget(
+                                  'Güvenilirlik: ', guvenilir),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Keyifli: $keyifli'),
+                              padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                              child:
+                                  _buildDescriptionWidget('Keyifli: ', keyifli),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Rahat Ulaşım: $rahatUlasim'),
+                              padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                              child: _buildDescriptionWidget(
+                                  'Rahat Ulaşım: ', rahatUlasim),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Mesafe: $distance km'),
+                              padding: const EdgeInsets.fromLTRB(20, 8, 18, 15),
+                              child: Row(
+                                children: <Widget>[
+                                  const Text(
+                                    'Açıklama: ',
+                                    textAlign: TextAlign.justify,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: RichText(
+                                      textAlign: TextAlign.justify,
+                                      text: TextSpan(
+                                        text: explanation,
+                                        style: TextStyle(
+                                          fontSize:
+                                              15.0, // Adjust font size as needed
+                                              fontStyle: FontStyle.italic,
+                                          color: Colors
+                                              .black, // Adjust color as needed
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -219,7 +243,6 @@ class _RoutesListViewState extends State<RoutesListView> {
     );
   }
 
-  // Function to generate wavy points
   List<LatLng> _getWavyPoints(
       double startLat, double startLng, double endLat, double endLng) {
     List<LatLng> points = [];
@@ -227,18 +250,10 @@ class _RoutesListViewState extends State<RoutesListView> {
         sqrt(pow(endLat - startLat, 2) + pow(endLng - startLng, 2));
     final double segmentLength = totalDistance /
         50; // Divide total distance into 50 segments for more waves
-    final double midPointLat = (startLat + endLat) / 2;
-    final double midPointLng = (startLng + endLng) / 2;
 
-    // Generate wavy points using a sine wave function with higher frequency and amplitude
     for (double t = 0; t <= 1; t += 0.01) {
-      // Increase step size for more points
-      final double offsetX = sin(t * pi * 10) *
-          segmentLength *
-          0.1; // Adjust divisor and multiplier to control wave amplitude and frequency
-      final double offsetY = cos(t * pi * 10) *
-          segmentLength *
-          0.1; // Adjust divisor and multiplier to control wave amplitude and frequency
+      final double offsetX = sin(t * pi * 10) * segmentLength * 0.1;
+      final double offsetY = cos(t * pi * 10) * segmentLength * 0.1;
       final double lat = startLat + (endLat - startLat) * t + offsetX;
       final double lng = startLng + (endLng - startLng) * t + offsetY;
       points.add(LatLng(lat, lng));
@@ -246,4 +261,55 @@ class _RoutesListViewState extends State<RoutesListView> {
 
     return points;
   }
+
+  Widget _buildDescriptionWidget(String title, dynamic content) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 4),
+          Expanded(
+            child: content is double
+                ? _buildStarRating(content)
+                : Text('$content'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget _buildStarRating(double rating) {
+  int numberOfFullStars = rating.floor();
+  int numberOfHalfStars = (rating * 2 % 2).toInt();
+  int numberOfEmptyStars = 5 - numberOfFullStars - numberOfHalfStars;
+
+  List<Widget> stars = [];
+
+  // Add full stars
+  for (int i = 0; i < numberOfFullStars; i++) {
+    stars.add(
+      Icon(Icons.star, color: Colors.amber, size: 24),
+    );
+  }
+
+  // Add half stars
+  if (numberOfHalfStars == 1) {
+    stars.add(
+      Icon(Icons.star_half, color: Colors.amber, size: 24),
+    );
+  }
+
+  // Add empty stars
+  for (int i = 0; i < numberOfEmptyStars; i++) {
+    stars.add(
+      Icon(Icons.star_border, color: Colors.amber, size: 24),
+    );
+  }
+
+  return Row(children: stars);
 }

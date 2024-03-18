@@ -221,7 +221,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
     return querySnapshot.size;
   }
 
-void showUserDialog() async {
+  void showUserDialog() async {
     String? email = await getUserEmail();
     if (email != null) {
       setState(() {
@@ -233,27 +233,21 @@ void showUserDialog() async {
         builder: (BuildContext context) {
           return AlertDialog(
             actions: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Image.asset(
-                        'assets/avatar2.png',
-                        width: 150,
-                        height: 150,
-                      ),
-                    ),
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/avatars.png',
+                    width: 270,
+                    height: 250,
+                  ),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                     child: Container(
                       padding: EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
@@ -296,6 +290,4 @@ void showUserDialog() async {
       );
     }
   }
-
-
 }

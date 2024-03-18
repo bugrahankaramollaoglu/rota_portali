@@ -777,7 +777,7 @@ class _MyMapState extends State<MyMap> {
       'rahatUlasim': rahatUlasim,
       'keyifli': keyifli,
       'distance': distanceBetween,
-      'aciklama': aciklama, // Açıklama verisini Firestore'a ekleyin
+      'explanation': aciklama, // Açıklama verisini Firestore'a ekleyin
     }).then((value) {
       _showToast('Rota eklendi!');
     }).catchError((error) {

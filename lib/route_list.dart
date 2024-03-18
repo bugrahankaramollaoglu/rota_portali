@@ -36,7 +36,7 @@ class _RoutesListViewState extends State<RoutesListView> {
         backgroundColor: Colors.deepPurpleAccent, // Set app bar color to purple
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -50,7 +50,7 @@ class _RoutesListViewState extends State<RoutesListView> {
           future: FirebaseFirestore.instance.collection('routes').get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasError) {
@@ -76,11 +76,15 @@ class _RoutesListViewState extends State<RoutesListView> {
                   final keyifli = document['keyifli'] ?? 0.0;
                   final rahatUlasim = document['rahatUlasim'] ?? 0.0;
                   final origin = document['origin'] ?? GeoPoint(0, 0);
+                  final destination = document['destination'] ?? GeoPoint(0, 0);
                   final distance =
                       document.exists && document['distance'] != null
                           ? document['distance']
                           : 0;
-                  final destination = document['destination'] ?? GeoPoint(0, 0);
+                  final explanation =
+                      document.exists && document['explanation'] != null
+                          ? document['explanation']
+                          : '';
 
                   // Check if this item is expanded
                   bool isExpanded = _expandedIndex == index;

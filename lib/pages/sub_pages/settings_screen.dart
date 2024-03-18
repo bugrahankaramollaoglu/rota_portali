@@ -13,22 +13,7 @@ class Settings_Screen extends StatefulWidget {
 }
 
 class _Settings_ScreenState extends State<Settings_Screen> {
-  ThemeMode _themeMode = ThemeMode.light;
-  final bool _notificationMode = true;
-
-  int _selectedIndex = 0;
-
-  static const List<Widget> _pages = <Widget>[
-    Text('Page 1'),
-    Text('Page 2'),
-    Text('Page 3'),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  String? userEmail = '';
 
   @override
   Widget build(BuildContext context) {
@@ -42,23 +27,6 @@ class _Settings_ScreenState extends State<Settings_Screen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20.0),
-            ListTile(
-              leading: const Icon(Icons.color_lens),
-              title: const Text(
-                'Temayı Değiştir',
-                style: TextStyle(fontSize: 18),
-              ),
-              trailing: Switch(
-                value: Theme.of(context).brightness == Brightness.dark,
-                onChanged: (value) {
-                  setState(() {
-                    _themeMode = value ? ThemeMode.dark : ThemeMode.light;
-                  });
-                },
-              ),
-            ),
-            Center(child: _divider()),
             ListTile(
               leading: const Icon(Icons.person_2_outlined),
               title: const Text(
@@ -66,7 +34,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
                 style: TextStyle(fontSize: 18),
               ),
               onTap: () {
-                // Add navigation logic here
+                showUserDialog();
               },
             ),
             Center(child: _divider()),
@@ -88,7 +56,6 @@ class _Settings_ScreenState extends State<Settings_Screen> {
                 style: TextStyle(fontSize: 18),
               ),
               onTap: () {
-                // Add sign out logic here
                 showLogoutAlert();
               },
             ),
@@ -147,7 +114,6 @@ class _Settings_ScreenState extends State<Settings_Screen> {
     );
   }
 
-// Function to get the email of the current user
   Future<String?> getUserEmail() async {
     FirebaseAuth _auth = FirebaseAuth.instance;
     User? user = _auth.currentUser;
@@ -156,7 +122,7 @@ class _Settings_ScreenState extends State<Settings_Screen> {
       String email = user.email!;
       return email;
     } else {
-      return null; // No user signed in
+      return null;
     }
   }
 
@@ -214,8 +180,8 @@ class _Settings_ScreenState extends State<Settings_Screen> {
 
   void logOut() async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    await auth.signOut(); // Sign out the current user
-    // Navigate to the login page
+    await auth.signOut();
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginPage()),
@@ -227,24 +193,98 @@ class _Settings_ScreenState extends State<Settings_Screen> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: 270,
-        height: 1, // Thickness of the divider
-        color: Colors.black, // Color of the divider
+        height: 1,
+        color: Colors.black,
       ),
     );
   }
 
   Future<void> removeRoutes(String email) async {
-    // Get a reference to the Firestore collection
     CollectionReference routes =
         FirebaseFirestore.instance.collection('routes');
 
-    // Query documents where "fromWhom" field matches the provided email
     QuerySnapshot querySnapshot =
         await routes.where('fromWhom', isEqualTo: email).get();
 
-    // Iterate through the documents and delete them
     for (var doc in querySnapshot.docs) {
       await doc.reference.delete();
     }
+  }
+
+  Future<int> getDocumentCount(String email) async {
+    CollectionReference routes =
+        FirebaseFirestore.instance.collection('routes');
+
+    QuerySnapshot querySnapshot =
+        await routes.where('fromWhom', isEqualTo: email).get();
+
+    return querySnapshot.size;
+  }
+
+  void showUserDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Image.asset(
+                      'assets/avatar2.png',
+                      width: 150,
+                      height: 150,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Container(
+                    padding: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      userEmail!,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            TextButton(
+              onPressed: null,
+              child: GFButton(
+                text: "Tamam",
+                textStyle: TextStyle(
+                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                  color: Colors.black,
+                ),
+                color: Colors.blue,
+                onPressed: () async {
+                  userEmail = await getUserEmail();
+                  if (userEmail != null) {
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

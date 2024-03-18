@@ -326,7 +326,7 @@ class _MyMapState extends State<MyMap> {
                     TextFormField(
                       controller:
                           _aciklamaController, // Burada kontrolcüyü atayın
-                     decoration: const InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Yazınız',
                         border: OutlineInputBorder(
                           borderSide:

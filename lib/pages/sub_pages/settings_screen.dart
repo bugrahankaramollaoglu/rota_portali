@@ -221,70 +221,81 @@ class _Settings_ScreenState extends State<Settings_Screen> {
     return querySnapshot.size;
   }
 
-  void showUserDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
+void showUserDialog() async {
+    String? email = await getUserEmail();
+    if (email != null) {
+      setState(() {
+        userEmail = email;
+      });
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Image.asset(
+                        'assets/avatar2.png',
+                        width: 150,
+                        height: 150,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Image.asset(
-                      'assets/avatar2.png',
-                      width: 150,
-                      height: 150,
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(
+                        userEmail!,
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      userEmail!,
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            TextButton(
-              onPressed: null,
-              child: GFButton(
-                text: "Tamam",
-                textStyle: TextStyle(
-                  fontFamily: GoogleFonts.luckiestGuy().fontFamily,
-                  color: Colors.black,
-                ),
-                color: Colors.blue,
-                onPressed: () async {
-                  userEmail = await getUserEmail();
-                  if (userEmail != null) {
-                    Navigator.of(context).pop();
-                  }
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
                 },
+                child: GFButton(
+                  text: "Tamam",
+                  textStyle: TextStyle(
+                    fontFamily: GoogleFonts.luckiestGuy().fontFamily,
+                    color: Colors.black,
+                  ),
+                  color: Colors.blue,
+                  onPressed: () async {
+                    userEmail = await getUserEmail();
+                    if (userEmail != null) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
               ),
-            ),
-          ],
-        );
-      },
-    );
+            ],
+          );
+        },
+      );
+    }
   }
+
+
 }

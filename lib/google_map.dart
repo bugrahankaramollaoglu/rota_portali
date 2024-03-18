@@ -744,14 +744,14 @@ class _MyMapState extends State<MyMap> {
 
     String? userEmail = await getUserEmail();
 
-    // if (userEmail == null ||
-    //     guvenilir == 0 ||
-    //     rahatUlasim == 0 ||
-    //     keyifli == 0 ||
-    //     distanceBetween == 0.0) {
-    //   _showToast('Bilgileri Doldurunuz.');
-    //   return;
-    // }
+    if (userEmail == null ||
+        guvenilir == 0 ||
+        rahatUlasim == 0 ||
+        keyifli == 0 ||
+        distanceBetween == 0.0) {
+      _showToast('Bilgileri Doldurunuz.');
+      return;
+    }
 
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance

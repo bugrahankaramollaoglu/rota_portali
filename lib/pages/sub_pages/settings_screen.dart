@@ -60,22 +60,6 @@ class _Settings_ScreenState extends State<Settings_Screen> {
             ),
             Center(child: _divider()),
             ListTile(
-              leading: const Icon(Icons.notifications_outlined),
-              title: const Text(
-                'Bildirimler',
-                style: TextStyle(fontSize: 18),
-              ),
-              trailing: Switch(
-                value: Theme.of(context).brightness == Brightness.dark,
-                onChanged: (value) {
-                  setState(() {
-                    // _notificationMode = value ? null : null;
-                  });
-                },
-              ),
-            ),
-            Center(child: _divider()),
-            ListTile(
               leading: const Icon(Icons.person_2_outlined),
               title: const Text(
                 'Profil',

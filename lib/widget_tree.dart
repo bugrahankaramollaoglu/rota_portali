@@ -1,5 +1,5 @@
-import 'package:backpack_pal/pages/home_page.dart';
-import 'package:backpack_pal/pages/login_page.dart';
+import 'package:rota_portali/pages/home_page.dart';
+import 'package:rota_portali/pages/login_page.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'auth.dart';

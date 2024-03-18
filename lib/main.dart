@@ -1,5 +1,5 @@
-import 'package:backpack_pal/firebase_options.dart';
-import 'package:backpack_pal/widget_tree.dart';
+import 'package:rota_portali/firebase_options.dart';
+import 'package:rota_portali/widget_tree.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 

@@ -1,4 +1,4 @@
-import 'package:backpack_pal/directions_model.dart';
+import 'package:rota_portali/directions_model.dart';
 import 'package:dio/dio.dart';
 import './.env.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

@@ -1,5 +1,5 @@
-import 'package:backpack_pal/auth.dart';
-import 'package:backpack_pal/pages/home_page.dart';
+import 'package:rota_portali/auth.dart';
+import 'package:rota_portali/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:backpack_pal/cities.dart';
+import 'package:rota_portali/cities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +11,7 @@ import 'package:getwidget/size/gf_size.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:backpack_pal/directions_model.dart';
+import 'package:rota_portali/directions_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 

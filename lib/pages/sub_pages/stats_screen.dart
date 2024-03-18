@@ -1,4 +1,4 @@
-import 'package:backpack_pal/google_map.dart';
+import 'package:rota_portali/google_map.dart';
 import 'package:flutter/material.dart';
 
 class Stats_Screen extends StatefulWidget {

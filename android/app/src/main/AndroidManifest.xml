@@ -1,10 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="backpack_pal"
+        android:label="rota_portali"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
-        <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
 
          <meta-data
             android:name="com.google.android.geo.API_KEY"

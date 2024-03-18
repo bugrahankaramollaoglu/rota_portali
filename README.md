@@ -1,6 +1,6 @@
 # rota-portali is a traveling app where you can share, rate and view routes in turkey
 
-![asd](https://github.com/bugrahankaramollaoglu/rota_portaliflappy/blob/main/graphics/graphic.png)
+![asd](https://github.com/bugrahankaramollaoglu/rota_portaliflappy/blob/main/graphics/feature.png)
 
 ## requirements
 

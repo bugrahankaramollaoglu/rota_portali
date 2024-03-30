@@ -2,9 +2,10 @@
 
 ![asd](https://github.com/bugrahankaramollaoglu/rota_portali/blob/main/graphics/feature.png)
 
-`[![Youtube Linki](http://img.youtube.com/vi/F4mY_-MkM2A/0.jpg)](http://www.youtube.com/watch?v=F4mY_-MkM2A)`
 
+##
 
+* youtube linki ----> [rota portalı](https://www.youtube.com/watch?v=F4mY_-MkM2A)
 * uygulama google oyun ve uygulama akademisi appJam turnuvasında 2.'lik ödülü alarak dereceye girdi!
 
 ## özellikleri

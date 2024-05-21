@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -50,21 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAz13scZUWUH1GznJhAvyjXbvcnME20qj4',
-    appId: '1:242989011538:android:d2010ddc6dbfcd4c72c58b',
-    messagingSenderId: '242989011538',
-    projectId: 'healtrack-c1807',
-    storageBucket: 'healtrack-c1807.appspot.com',
+    apiKey: 'AIzaSyCcsOAwbGKcRXPYBz-OxxoEx5KA8XAB8SI',
+    appId: '1:473966314627:android:66d8997a3fba26243147b6',
+    messagingSenderId: '473966314627',
+    projectId: 'rota-portali',
+    storageBucket: 'rota-portali.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBjCcTFjXfF_ApHul57oeBj9hn-yOfJ8_E',
-    appId: '1:242989011538:ios:e0c780ca4705691d72c58b',
-    messagingSenderId: '242989011538',
-    projectId: 'healtrack-c1807',
-    storageBucket: 'healtrack-c1807.appspot.com',
-    androidClientId: '242989011538-segk582qa7ui6onhjkck88iuijn5qj35.apps.googleusercontent.com',
-    iosClientId: '242989011538-dd57anifhfqo3ubr9mk7dnjsh8pm6sir.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAl4_HHOS6CaoPuGjzOAlckQYWQxgeiC2s',
+    appId: '1:473966314627:ios:2e866be108d258a43147b6',
+    messagingSenderId: '473966314627',
+    projectId: 'rota-portali',
+    storageBucket: 'rota-portali.appspot.com',
     iosBundleId: 'com.example.backpackPal',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDF728rra9M1BuF1kc-EUGgqN3BxN67x-k',
+    appId: '1:473966314627:web:61cbb4756b1959a13147b6',
+    messagingSenderId: '473966314627',
+    projectId: 'rota-portali',
+    authDomain: 'rota-portali.firebaseapp.com',
+    storageBucket: 'rota-portali.appspot.com',
+    measurementId: 'G-8R3W5W0KHG',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAl4_HHOS6CaoPuGjzOAlckQYWQxgeiC2s',
+    appId: '1:473966314627:ios:2e866be108d258a43147b6',
+    messagingSenderId: '473966314627',
+    projectId: 'rota-portali',
+    storageBucket: 'rota-portali.appspot.com',
+    iosBundleId: 'com.example.backpackPal',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDF728rra9M1BuF1kc-EUGgqN3BxN67x-k',
+    appId: '1:473966314627:web:f39f0ff8ffb3b4603147b6',
+    messagingSenderId: '473966314627',
+    projectId: 'rota-portali',
+    authDomain: 'rota-portali.firebaseapp.com',
+    storageBucket: 'rota-portali.appspot.com',
+    measurementId: 'G-Q8GJMBKQRL',
+  );
+
 }

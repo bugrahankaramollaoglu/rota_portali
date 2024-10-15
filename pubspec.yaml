@@ -50,6 +50,7 @@ dependencies:
   fluttertoast: ^8.2.4
   curved_navigation_bar: ^1.0.0
   flutter_rating_bar: ^4.0.1
+  win32: ^5.5.4
 
 dev_dependencies:
   flutter_test:
